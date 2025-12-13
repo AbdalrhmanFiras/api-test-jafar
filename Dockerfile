@@ -44,4 +44,4 @@ RUN composer install --no-dev --optimize-autoloader --no-interaction
 # Permissions
 RUN chown -R www-data:www-data storage bootstrap/cache vendor
 
-EXPOSE 80
+EXPOSE 8080
