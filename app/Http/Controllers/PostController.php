@@ -51,7 +51,7 @@ class PostController extends Controller
         $post = Post::findorFail($id);
 
         $post->update($data);
-
+         $post->save($data);
          return $this->responseSuccess($post, 'post updated successfully');
         }catch(ModelNotFoundException){
           return $this->responseError(null,'post not found', 404);
@@ -64,7 +64,7 @@ class PostController extends Controller
         try{
             $post = Post::findOrFail($id);
             $post->delete();
-            return $this->responseSuccess(null,'Posts deleted successfully', 200);
+            return $this->responseSuccess([],'Posts deleted successfully', 200);
         }catch(ModelNotFoundException){
             return $this->responseError(null,'post not found', 404);
 

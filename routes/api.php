@@ -20,13 +20,13 @@ Route::middleware('auth:api')->group(function () {
     Route::get('/me', [AuthController::class, 'me']);
 });
 
-Route::get('/post/index', [PostController::class, 'index'])->withoutMiddleware('auth:api');
+Route::get('/post', [PostController::class, 'index'])->withoutMiddleware('auth:api');
 
 Route::middleware('auth:api')->group(function () {
-    Route::post('/post/create', [PostController::class, 'store']);
+    Route::post('/post', [PostController::class, 'store']);
+    Route::put('/post/{Id}', [PostController::class, 'edit'])->withoutMiddleware('auth:api');
     Route::get('/post/{Id}', [PostController::class, 'show']);
-    Route::put('/post/edit/{Id}', [PostController::class, 'edit']);
-    Route::delete('/post/delete/{Id}', [PostController::class, 'delete']);
+    Route::delete('/post/{Id}', [PostController::class, 'delete']);
 });
 
 

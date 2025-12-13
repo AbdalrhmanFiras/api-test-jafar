@@ -1,18 +1,13 @@
-version: '3.8'
-
 services:
-  app:
-    build:
-      context: .
-      dockerfile: Dockerfile
-    container_name: laravel_app
-    working_dir: /var/www/html
+  db:
+    image: mysql:8.0
+    container_name: laravel_db
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_DATABASE: laravel
+      MYSQL_USER: laravel_user
+      MYSQL_PASSWORD: secret
     ports:
-      - "8000:80"   # Apache exposed port
-    volumes:
-      - .:/var/www/html
+      - "3306:3306"
     networks:
       - laravel
-
-networks:
-  laravel:
