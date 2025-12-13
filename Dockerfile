@@ -1,7 +1,7 @@
 FROM php:8.3-apache
 
-# Public folder
-ENV APACHE_DOCUMENT_ROOT /var/www/html/public
+# Set public folder
+ENV APACHE_DOCUMENT_ROOT=/var/www/html/public
 
 RUN sed -ri -e 's!/var/www/html!${APACHE_DOCUMENT_ROOT}!g' /etc/apache2/sites-available/*.conf \
     && sed -ri -e 's!/var/www/!${APACHE_DOCUMENT_ROOT}!g' /etc/apache2/apache2.conf /etc/apache2/conf-available/*.conf
@@ -27,21 +27,27 @@ RUN apt-get update && apt-get install -y \
 # Enable Apache rewrite
 RUN a2enmod rewrite
 
+# Apache Laravel config
+COPY docker/apache.conf /etc/apache2/conf-available/laravel.conf
+RUN a2enconf laravel
+
 # Composer
 COPY --from=composer:2 /usr/bin/composer /usr/bin/composer
 
 WORKDIR /var/www/html
 
-# Copy Laravel project
-COPY . .
+# Copy only composer files first (cache optimization)
+COPY composer.json composer.lock ./
 
-# Permissions
-RUN chown -R www-data:www-data storage bootstrap/cache
-
-# Install dependencies
 RUN composer install --no-dev --optimize-autoloader --no-interaction
 
-EXPOSE 80
+# Copy the rest of the project
+COPY . .
 
-COPY docker/apache.conf /etc/apache2/conf-available/laravel.conf
-RUN a2enconf laravel
+# Permissions (critical)
+RUN chown -R www-data:www-data \
+    storage \
+    bootstrap/cache \
+    vendor
+
+EXPOSE 80
