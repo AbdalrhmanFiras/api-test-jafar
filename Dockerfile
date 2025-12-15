@@ -1,5 +1,5 @@
 # استخدم صورة PHP مع Apache
-FROM php:8.3-apache
+FROM php:8.4-apache
 
 # إعداد مجلد public كجذر للموقع
 ENV APACHE_DOCUMENT_ROOT /var/www/html/public
@@ -42,7 +42,7 @@ RUN mkdir -p storage/framework/{sessions,views,cache} \
 # تثبيت الحزم بـ Composer
 RUN composer install --no-interaction --prefer-dist --optimize-autoloader --no-dev || \
     (echo "Composer install failed, trying without --no-dev" && \
-     composer install --no-interaction --prefer-dist --optimize-autoloader)
+    composer install --no-interaction --prefer-dist --optimize-autoloader)
 
 # تغيير صلاحيات الملفات
 RUN chown -R www-data:www-data /var/www/html \
