@@ -1,10 +1,14 @@
-# Base image
-FROM php:8.4-apache
+# استخدم صورة PHP مع Apache
+FROM php:8.3-apache
 
-# Set document root
-ENV APACHE_DOCUMENT_ROOT=/var/www/html/public
+# إعداد مجلد public كجذر للموقع
+ENV APACHE_DOCUMENT_ROOT /var/www/html/public
 
-# System dependencies
+# تعديل إعدادات Apache لتوجيه للـ public
+RUN sed -ri -e 's!/var/www/html!${APACHE_DOCUMENT_ROOT}!g' /etc/apache2/sites-available/*.conf \
+    && sed -ri -e 's!/var/www/!${APACHE_DOCUMENT_ROOT}!g' /etc/apache2/apache2.conf /etc/apache2/conf-available/*.conf
+
+# تثبيت المتطلبات اللازمة لـ Laravel
 RUN apt-get update && apt-get install -y \
     git \
     curl \
@@ -12,43 +16,24 @@ RUN apt-get update && apt-get install -y \
     unzip \
     libonig-dev \
     libzip-dev \
-    libxml2-dev \
     libpq-dev \
-    && docker-php-ext-install \
-    pdo \
-    pdo_mysql \
-    pdo_pgsql \
-    zip \
-    mbstring \
-    bcmath \
-    opcache
+    libxml2-dev \
+&& docker-php-ext-install pdo pdo_mysql pdo_pgsql zip mbstring exif pcntl bcmath
 
-# Enable Apache modules
-RUN a2enmod rewrite headers
+# تثبيت Composer
+COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
 
-# Configure Apache document root
-RUN sed -ri -e 's!/var/www/html!${APACHE_DOCUMENT_ROOT}!g' /etc/apache2/sites-available/*.conf \
-    && sed -ri -e 's!/var/www/!${APACHE_DOCUMENT_ROOT}!g' /etc/apache2/apache2.conf /etc/apache2/conf-available/*.conf
+# نسخ ملفات Laravel
+COPY . /var/www/html
 
-# Copy and configure Apache virtual host
-COPY docker/apache.conf /etc/apache2/sites-available/000-default.conf
-RUN a2dissite 000-default.conf 2>/dev/null || true \
-    && a2ensite 000-default.conf
+# تفعيل mod_rewrite في Apache
+RUN a2enmod rewrite
 
-# Copy all project files
-WORKDIR /var/www/html
-COPY . .
+# تغيير صلاحيات الملفات
+RUN chown -R www-data:www-data /var/www/html
 
-# Composer
-COPY --from=composer:2 /usr/bin/composer /usr/bin/composer
+# تثبيت الحزم بـ Composer
+RUN composer install --no-interaction --prefer-dist --optimize-autoloader
 
-# Install PHP dependencies
-RUN composer install --no-dev --optimize-autoloader --no-interaction
-
-# Set permissions
-RUN chown -R www-data:www-data /var/www/html \
-    && chmod -R 755 /var/www/html/storage \
-    && chmod -R 755 /var/www/html/bootstrap/cache
-
-# Expose port 80 (Apache default)
+# فتح البورت
 EXPOSE 80
