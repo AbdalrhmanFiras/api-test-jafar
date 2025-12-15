@@ -17,20 +17,18 @@ class PostController extends Controller
      * Create post
      */
      public function store(Request $request){
-
         $data = $request->validate([
             'name'    => 'required|string',
             'dec'     => 'required|string',
             'comment' => 'nullable|string',
             'like'    => 'nullable|string'
         ]);
-
-         $user = Auth::id();
-         $data['user_id'] = $user;
-         $post = Post::create($data);
-
+        $user = Auth::id();
+        $data['user_id'] = $user;
+        $post = Post::create($data);
+        // $post->replicate()->fill(['name' => 'copy']) ->save();
+        
          return $this->responseSuccess($post, 'post created successfully'  , 201);
-
      }
 
     /**
@@ -47,9 +45,7 @@ class PostController extends Controller
          'comment' => 'sometimes|string', 
          'like' => 'sometimes|string', 
          ]);
-
         $post = Post::findorFail($id);
-
         $post->update($data);
          $post->save($data);
          return $this->responseSuccess($post, 'post updated successfully');
@@ -78,8 +74,14 @@ class PostController extends Controller
 
         try{
             $posts = Post::with('comments')->paginate(10);
-            if($posts->isEmpty())  return $this->responseError(null,'No posts found',404);
-            return $this->responseSuccess($posts,'Posts fetched successfully', 200);
+            return $this->responseSuccess(
+                ['data' => PostResource::collection($posts),
+                'pagination' => [
+                    'current_page' => $posts->currentPage(),
+                    'last_page' => $posts->lastPage(),
+                    'per_page' => $posts->perPage(),
+                    'total' => $posts->total(),
+                    ]],!$posts ?'Posts fetched successfully' : 'No posts found' , 200);
         }catch (Exception $e) {
         return $this->responseError(null,
             'Something went wrong',500,

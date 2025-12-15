@@ -31,8 +31,8 @@ Route::middleware('auth:api')->group(function () {
 
 
 Route::middleware('auth:api')->group(function(){
+    Route::get('post/comment', [CommentController::class , 'index']);
         Route::post('post/{postId}/comment', [CommentController::class , 'store']);
-        Route::get('post/comment', [CommentController::class , 'index']);
         
     });
 

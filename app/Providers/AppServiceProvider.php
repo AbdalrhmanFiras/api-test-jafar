@@ -2,6 +2,8 @@
 
 namespace App\Providers;
 
+use App\Models\Post;
+use App\Observers\PostObserver;
 use Dedoc\Scramble\Scramble;
 use Illuminate\Support\ServiceProvider;
 use Dedoc\Scramble\Support\Generator\OpenApi;
@@ -23,6 +25,7 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot(): void
     {
+         Post::observe(PostObserver::class);
         Scramble::configure()
         ->withDocumentTransformers(function (OpenApi $openApi) {
             $openApi->secure(

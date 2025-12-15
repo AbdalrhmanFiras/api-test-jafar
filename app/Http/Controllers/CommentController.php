@@ -43,10 +43,10 @@ class CommentController extends Controller
     public function index(){
         $user_id = Auth::id();
         $comments = Comment::where('user_id' , $user_id)->paginate(5);
-        if($comments->total() === 0){
-             return response()->json(['message' => 'No comments found' , 'data' => []],404);
-        }
-            return response()->json(['message' => 'Comment fetched successfully' , 'data' => $comments ],200);
+        // if($comments->total() === 0){
+        //      return response()->json(['message' => 'No comments found' , 'data' => []],404);
+        // }
+            return $this->responseSuccess($comments , !$comments ? 'Comment fetched successfully' : 'not comments' ,200);
     }
 
 }
