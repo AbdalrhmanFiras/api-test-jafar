@@ -44,10 +44,17 @@ RUN composer install --no-interaction --prefer-dist --optimize-autoloader --no-d
     (echo "Composer install failed, trying without --no-dev" && \
     composer install --no-interaction --prefer-dist --optimize-autoloader)
 
+# نسخ ملف entrypoint
+COPY docker-entrypoint.sh /usr/local/bin/
+RUN chmod +x /usr/local/bin/docker-entrypoint.sh
+
 # تغيير صلاحيات الملفات
 RUN chown -R www-data:www-data /var/www/html \
     && chmod -R 755 /var/www/html/storage \
     && chmod -R 755 /var/www/html/bootstrap/cache
+
+# استخدام entrypoint script
+ENTRYPOINT ["docker-entrypoint.sh"]
 
 # فتح البورت
 EXPOSE 80
