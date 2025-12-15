@@ -18,6 +18,8 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
     libzip-dev \
     libpq-dev \
     libxml2-dev \
+    netcat-openbsd \
+    iputils-ping \
     && docker-php-ext-install pdo pdo_mysql pdo_pgsql zip mbstring exif pcntl bcmath \
     && apt-get clean \
     && rm -rf /var/lib/apt/lists/*
