@@ -11,11 +11,14 @@ Route::get('/', function () {
 Route::get('/test-db', function() {
     try {
         DB::connection()->getPdo();
+      
         return 'DB connection OK';
     } catch (\Exception $e) {
         return 'DB connection failed: ' . $e->getMessage();
     }
 });
+
+
 
 
 
