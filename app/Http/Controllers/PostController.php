@@ -26,7 +26,6 @@ class PostController extends Controller
         $user = Auth::id();
         $data['user_id'] = $user;
         $post = Post::create($data);
-        // $post->replicate()->fill(['name' => 'copy']) ->save();
         
          return $this->responseSuccess($post, 'post created successfully'  , 201);
      }

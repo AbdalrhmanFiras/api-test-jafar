@@ -19,8 +19,7 @@ class CommentController extends Controller
      * Create(Add) Comment to Post 
      */
     public function store(Request $request, $postId){
-        $data = $request->validate(['context' => 'required|string',
-        
+        $data = $request->validate(['context' => 'required|string',  
     ]); 
         $user = Auth::id();
         $postId = Post::where('id' , $postId)->value('id');

@@ -23,7 +23,7 @@ class PostCrudTest extends TestCase{
     }
 
     /** @test */
-    public function test_create_post(){
+    public function test_create_post(){//work
         $payload = [
             'name' => 'test post',
             'dec' => 'test dec'
@@ -55,7 +55,7 @@ class PostCrudTest extends TestCase{
 
 
        /** @test */
-    public function test_delete_post()
+    public function test_delete_post()//work
     {
         $post = Post::factory()->create(['user_id' => $this->user->id]);
 
