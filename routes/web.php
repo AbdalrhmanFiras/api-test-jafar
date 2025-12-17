@@ -13,7 +13,8 @@ Route::get('/test-db', function() {
         DB::connection()->getPdo();
       
         return 'DB connection OK';
-    } catch (\Exception $e) {
+    } catch (\Exception $e
+    ) {
         return 'DB connection failed: ' . $e->getMessage();
     }
 });
