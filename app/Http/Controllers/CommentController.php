@@ -22,7 +22,7 @@ class CommentController extends Controller
         $data = $request->validate(['context' => 'required|string',  
     ]); 
         $user = Auth::id();
-        $postId = Post::where('id' , $postId)->value('id');
+        $post = Post::find($postId);
         if(!$postId){
             return response()->json(['post not found'],404);
         }
@@ -30,7 +30,7 @@ class CommentController extends Controller
         $data['user_id'] = $user ?? null; 
         $comment = Comment::create($data);
 
-    return response()->json(['Comment Added Successfully' ,$comment],201);
+    return $this->responseSuccess($comment,'Comment Added Successfully' ,201);
     }
 
 
