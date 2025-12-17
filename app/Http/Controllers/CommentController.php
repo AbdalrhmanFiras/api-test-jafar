@@ -30,7 +30,7 @@ class CommentController extends Controller
         $data['user_id'] = $user ?? null; 
         $comment = Comment::create($data);
 
-    return response()->json(['Comment Added Successfully' ,$comment],200);
+    return response()->json(['Comment Added Successfully' ,$comment],201);
     }
 
 
