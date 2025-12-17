@@ -22,14 +22,14 @@ class CommentController extends Controller
         $data = $request->validate(['context' => 'required|string',
         
     ]); 
-    $user = Auth::id();
-    $postId = Post::where('id' , $postId)->value('id');
-    if(!$postId){
-        return response()->json(['post not found'],404);
-    }
-     $data['post_id'] = $postId;
-     $data['user_id'] = $user ?? null; 
-    $comment = Comment::create($data);
+        $user = Auth::id();
+        $postId = Post::where('id' , $postId)->value('id');
+        if(!$postId){
+            return response()->json(['post not found'],404);
+        }
+        $data['post_id'] = $postId;
+        $data['user_id'] = $user ?? null; 
+        $comment = Comment::create($data);
 
     return response()->json(['Comment Added Successfully' ,$comment],200);
     }
