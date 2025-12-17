@@ -32,13 +32,12 @@ Route::middleware('auth:api')->group(function () {
 
 Route::middleware('auth:api')->group(function(){
     Route::get('post/comment', [CommentController::class , 'index']);
-        Route::post('post/{postId}/comment', [CommentController::class , 'store']);
+    Route::post('post/{postId}/comment', [CommentController::class , 'store']);
         
     });
 
 
 Route::middleware('auth:api')->group(function(){
-
     Route::post('like/{postId}' , [LikeController::class , 'like']);
     Route::post('unlike/{postId}' , [LikeController::class , 'unlike']);
     Route::get('like/total/{postId}' , [LikeController::class , 'totalLikes']);

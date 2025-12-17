@@ -81,7 +81,7 @@ class PostController extends Controller
                     'last_page' => $posts->lastPage(),
                     'per_page' => $posts->perPage(),
                     'total' => $posts->total(),
-                    ]],$posts ?'Posts fetched successfully' : 'No posts found' , 200);
+                    ]],$posts ?'Posts fetched successfully' : 'No posts foundsss' , 200);
         }catch (Exception $e) {
         return $this->responseError(null,
             'Something went wrong',500,
