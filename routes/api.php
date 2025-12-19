@@ -6,6 +6,7 @@ use App\Http\Controllers\AuthController;
 use App\Http\Controllers\CommentController;
 use App\Http\Controllers\LikeController;
 use App\Http\Controllers\PostController;
+use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\UserController;
 
 Route::get('/users' , [UserController::class , 'index']);
@@ -38,3 +39,9 @@ Route::middleware('auth:api')->group(function(){
     Route::get('like/total/{postId}' , [LikeController::class , 'totalLikes']);
 
 });
+
+
+Route::post('/profile' , [ProfileController::class , 'store'])
+->middleware('auth:api');
+Route::put('/profile/{profileId}' , [ProfileController::class , 'store'])
+->middleware('auth:api');

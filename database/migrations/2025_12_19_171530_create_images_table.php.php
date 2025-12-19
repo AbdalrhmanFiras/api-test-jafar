@@ -11,14 +11,13 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('profiles', function (Blueprint $table) {
+        Schema::create('images' , function (Blueprint $table){
             $table->id();
-            $table->string('name');
-            $table->text('bio')->nullable();
-            $table->foreignId('user_id')->constrained('users')->cascadeOnDelete();
-            // $table->string('image_url')->nullable();
+            $table->string('url');
+            $table->morphs('imageable'); // image type and image id
             $table->timestamps();
         });
+        
     }
 
     /**
@@ -26,6 +25,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('profiles');
+        //
     }
 };
