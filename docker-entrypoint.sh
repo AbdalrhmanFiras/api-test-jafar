@@ -4,11 +4,18 @@ set -e
 # Fix permissions
 chown -R www-data:www-data /var/www/html/storage /var/www/html/bootstrap/cache
 chmod -R 755 /var/www/html/storage /var/www/html/bootstrap/cache
+# Ensure public storage directory is writable
+chmod -R 775 /var/www/html/storage/app/public
+chown -R www-data:www-data /var/www/html/storage/app/public
 
 # Create storage directories if they don't exist
 mkdir -p /var/www/html/storage/framework/{sessions,views,cache}
 mkdir -p /var/www/html/storage/logs
+mkdir -p /var/www/html/storage/app/public/profiles
 mkdir -p /var/www/html/bootstrap/cache
+
+# Create symbolic link for storage (IMPORTANT for serving files)
+php artisan storage:link || true
 
 # Clear and cache config
 php artisan config:clear || true
