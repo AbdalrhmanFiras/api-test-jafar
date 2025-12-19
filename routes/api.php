@@ -43,7 +43,7 @@ Route::middleware('auth:api')->group(function(){
 
 Route::post('/profile' , [ProfileController::class , 'store'])
 ->middleware('auth:api');
-Route::get('/profile/{profileId}/' , [ProfileController::class , 'show'])
+Route::get('/profile/' , [ProfileController::class , 'show'])
 ->middleware('auth:api');
 Route::put('/profile/{profileId}' , [ProfileController::class , 'update'])
 ->middleware('auth:api');
