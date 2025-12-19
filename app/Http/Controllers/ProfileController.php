@@ -7,8 +7,15 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Storage;
 
+/**
+ * @tags Profile Endpoint
+ */
 class ProfileController extends Controller
 {
+
+    /**
+ * create Profile 
+ */
     public function store(Request $request){
         $userId = Auth::id();
         $data = $request->validate([
@@ -33,14 +40,16 @@ class ProfileController extends Controller
     }
 
 
-
+   /**
+ * update Profile 
+ */
     public function update(Request $request)
     {
     $userId = Auth::id();
     $data = $request->validate([
         'name'  => 'required|string|max:225',
-        'bio'   => 'nullable|string',
-        'image' => 'nullable|image|mimes:jpg,jpeg,png|max:2048' 
+        'bio'   => 'sometimes|string',
+        'image' => 'sometimes|image|mimes:jpg,jpeg,png|max:2048' 
     ]);
 
     
@@ -80,4 +89,20 @@ class ProfileController extends Controller
         'data' => $profile->load('image')
     ], 200);
 }
+
+   /**
+ * show Profile 
+ */
+    public function show(){ 
+        $userId = Auth::id();
+        $profile = Profile::where('user_id' , $userId)->first();
+        if(!$profile)
+        {
+            return response()->json(['message' => 'profile not found'] , 404);
+        }
+        return response()->json(['message' => 'Profile fetched successfully' , 'data' => $profile->load('image')],200);
+    }
 }
+
+
+
