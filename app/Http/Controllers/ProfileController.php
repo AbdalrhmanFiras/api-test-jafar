@@ -93,15 +93,25 @@ class ProfileController extends Controller
    /**
  * show Profile 
  */
-    public function show(){ 
-        $userId = Auth::id();
-        $profile = Profile::where('user_id' , $userId)->first();
-        if(!$profile)
-        {
-            return response()->json(['message' => 'profile not found'] , 404);
-        }
-        return response()->json(['message' => 'Profile fetched successfully' , 'data' => $profile->load('image')],200);
+   public function show(){ 
+    $userId = Auth::id();
+    $profile = Profile::with('image')->where('user_id', $userId)->first();
+
+    if(!$profile) {
+        return response()->json(['message' => 'Profile not found'], 404);
     }
+
+    // Include full URL from the image relationship
+    $data = $profile->toArray();
+    if ($profile->image) {
+        $data['image_url'] = $profile->image->url; // accessor on Image model will generate full URL
+    }
+
+    return response()->json([
+        'message' => 'Profile fetched successfully',
+        'data' => $data
+    ], 200);
+}
 }
 
 

@@ -12,11 +12,9 @@ class Image extends Model
         return $this->morphTo();
     }
 
-    public function getFullUrlAttribute()
+       public function getUrlAttribute($value)
     {
-        // If you store images in storage/app/public
-        return asset('storage/' . $this->url);
+        return asset('storage/' . $value);
     }
-
 
 }
