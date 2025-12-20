@@ -5,6 +5,7 @@ use App\Models\Profile;
 use Illuminate\Support\Str;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use App\Http\Resources\ProfileResource;
 use Illuminate\Support\Facades\Storage;
 
 /**
@@ -104,16 +105,18 @@ class ProfileController extends Controller
 
     return response()->json([
         'message' => 'Profile fetched successfully',
-        'data' => $profile
+        'data' => new ProfileResource($profile)
     ], 200);
 }
 
 
-
+/**
+ * Get all profiles
+ */
     public function index(){
         $profiles = Profile::paginate(5);
             return $this->responseSuccess(
-                ['data' => $profiles,
+                ['data' => ProfileResource::collection($profiles),
                 'pagination' => [
                     'current_page' => $profiles->currentPage(),
                     'last_page' => $profiles->lastPage(),
