@@ -17,28 +17,37 @@ class ProfileController extends Controller
     /**
  * create Profile 
  */
-    public function store(Request $request){
-        $userId = Auth::id();
-        $data = $request->validate([
-            'name' => 'required|string|max:225',
-            'bio' => 'nullable|string',
-            'image'=> 'required|image|mimes:jpg,jpeg,png|max:2048'
-        ]);
-        // if($profileCheck = Profile::where('user_id' , $userId)->first()){
-        //     return response()->json(['message' => 'profile already created'] , 200);
-        // }
-        $data['user_id'] = $userId;
-        $profile = Profile::create($data);
-        $file = $request->file('image');
-        $ext = $file->extension();
-        $filename = (string) Str::uuid() . '.' . $ext;
-        $path = $file->storeAs('profiles' , $filename,'public')        ;
-        $profile->image()->create([
-            'url' => $path,
-            'type' => 'profile'
-        ]);
-        return response()->json(['message' => 'Profile create successfully' , 'data' => new ProfileResource($profile)] , 201);
-    }
+   public function store(Request $request)
+{
+    $userId = Auth::id();
+    $data = $request->validate([
+        'name' => 'required|string|max:225',
+        'bio'  => 'nullable|string',
+        'image'=> 'required|image|mimes:jpg,jpeg,png|max:2048'
+    ]);
+
+    // if(Profile::where('user_id', $userId)->exists()){
+    //     return response()->json(['message' => 'Profile already created'], 200);
+    // }
+
+    $data['user_id'] = $userId;
+    $profile = Profile::create($data);
+
+    $file = $request->file('image');
+    $filename = (string) Str::uuid() . '.' . $file->extension();
+    $path = $file->storeAs('profiles', $filename, 'public'); // 'profiles/uuid.jpg'
+
+    // إنشاء الصورة بدون عمود type
+    $profile->image()->create([
+        'url' => $path
+    ]);
+
+    return response()->json([
+        'message' => 'Profile created successfully',
+        'data' => new ProfileResource($profile)
+    ], 201);
+}
+
 
 
    /**
