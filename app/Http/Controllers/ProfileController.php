@@ -54,41 +54,41 @@ public function update(Request $request)
     ]);
 
     $profile = Profile::where('user_id', $userId)->first();
-    // if (!$profile) {
-    //     return response()->json(['message' => 'Profile not found'], 404);
-    // }
 
+    if (!$profile) {
+        return response()->json(['message' => 'Profile not found'], 404);
+    }
+
+    // Update name and bio
     $profile->update([
         'name' => $data['name'],
         'bio'  => $data['bio'] ?? $profile->bio,
     ]);
 
-    if($request->hasFile('image')){
-            $file = $request->file('image');
-            
-            $ext = $file->extension();
-            $filename = (string) Str::uuid() . '.' . $ext;
-         
+    // Handle image upload
+    if ($request->hasFile('image')) {
+        $file = $request->file('image');
+        $filename = (string) Str::uuid() . '.' . $file->extension();
+        $path = $file->storeAs('profiles', $filename, 'public');
 
-         $path = $file->storeAs('profiles' , $filename,'public');
-         $image = $profile->image;
+        $image = $profile->image;
 
         if ($image) {
-            Storage::disk('public')->delete($image->url);
-            $profile->update(['url' => $path]);
+            // Delete old file if exists
+            if ($image->url) {
+                Storage::disk('public')->delete($image->url);
+            }
+            $image->update(['url' => $path]);
         } else {
             $profile->image()->create(['url' => $path]);
         }
-
     }
-        $profile->update($data);
 
     return response()->json([
         'message' => 'Profile updated successfully',
         'data' => new ProfileResource($profile)
     ], 200);
 }
-
    /**
  * show Profile 
  */
