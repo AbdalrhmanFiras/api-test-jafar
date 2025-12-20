@@ -37,7 +37,7 @@ class ProfileController extends Controller
             'url' => $path,
             'type' => 'profile'
         ]);
-        return response()->json(['message' => 'Profile create successfully' , 'data' => $profile] , 201);
+        return response()->json(['message' => 'Profile create successfully' , 'data' => new ProfileResource($profile)] , 201);
     }
 
 
@@ -87,7 +87,7 @@ class ProfileController extends Controller
 
     return response()->json([
         'message' => 'Profile updated successfully',
-        'data' => $profile
+        'data' => new ProfileResource($profile)
     ], 200);
 }
 

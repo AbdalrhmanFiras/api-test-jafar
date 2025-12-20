@@ -94,7 +94,7 @@ class PostController extends Controller
         if (Storage::disk('public')->exists($filePath)) {
             Storage::disk('public')->delete($filePath);
         }
-    $image->delete();
+             $image->delete();
 }
             $post->delete();
             return $this->responseSuccess([],'Posts deleted successfully', 200);
