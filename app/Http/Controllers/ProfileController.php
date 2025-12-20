@@ -7,6 +7,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use App\Http\Resources\ProfileResource;
 use Illuminate\Support\Facades\Storage;
+use App\Http\Requests\StoreProfileRequest;
 
 /**
  * @tags Profile Endpoint
@@ -17,14 +18,10 @@ class ProfileController extends Controller
     /**
  * create Profile 
  */
-   public function store(Request $request)
+   public function store(StoreProfileRequest $request)
 {
     $userId = Auth::id();
-    $data = $request->validate([
-        'name' => 'required|string|max:225',
-        'bio'  => 'nullable|string',
-        'image'=> 'required|image|mimes:jpg,jpeg,png|max:2048'
-    ]);
+    $data = $request->validated();
 
     // if(Profile::where('user_id', $userId)->exists()){
     //     return response()->json(['message' => 'Profile already created'], 200);
@@ -63,7 +60,7 @@ class ProfileController extends Controller
     ]);
 
     
-    $profile = Profile::where('user_id', $userId)->first();
+    $profile = Profile::with('image')->where('user_id', $userId)->first();
     if (!$profile) {
         return response()->json(['message' => 'Profile not found'], 404);
     }

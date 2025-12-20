@@ -22,7 +22,9 @@ class StoreProfileRequest extends FormRequest
     public function rules(): array
     {
         return [
-            
+        'name' => 'required|string|max:225',
+        'bio'  => 'nullable|string',
+        'image'=> 'required|image|mimes:jpg,jpeg,png|max:2048'
         ];
     }
 }
