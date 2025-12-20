@@ -47,3 +47,4 @@ Route::get('/profile/' , [ProfileController::class , 'show'])
 ->middleware('auth:api');
 Route::put('/profile/{profileId}' , [ProfileController::class , 'update'])
 ->middleware('auth:api');
+Route::get('/profile/all' , [ProfileController::class , 'index']);

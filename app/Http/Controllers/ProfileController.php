@@ -53,7 +53,7 @@ class ProfileController extends Controller
     ]);
 
     
-    $profile = Profile::with('image')->where('user_id', $userId)->first();
+    $profile = Profile::where('user_id', $userId)->first();
     if (!$profile) {
         return response()->json(['message' => 'Profile not found'], 404);
     }
@@ -95,22 +95,32 @@ class ProfileController extends Controller
  */
    public function show(){ 
     $userId = Auth::id();
-    $profile = Profile::with('image')->where('user_id', $userId)->first();
+    $profile = Profile::where('user_id', $userId)->first();
 
-    if(!$profile) {
+ 
+   if(!$profile) {
         return response()->json(['message' => 'Profile not found'], 404);
     }
 
-    $data = $profile->toArray();
-    // if ($profile->image) {
-    //     $data['image_url'] = $profile->image->url; 
-    // }
-
     return response()->json([
         'message' => 'Profile fetched successfully',
-        'data' => $data
+        'data' => $profile
     ], 200);
 }
+
+
+
+    public function index(){
+        $profiles = Profile::paginate(5);
+            return $this->responseSuccess(
+                ['data' => $profiles,
+                'pagination' => [
+                    'current_page' => $profiles->currentPage(),
+                    'last_page' => $profiles->lastPage(),
+                    'per_page' => $profiles->perPage(),
+                    'total' => $profiles->total(),
+                    ]],$profiles ?'Profiles fetched successfully' : 'No Profiles found' , 200);
+    }
 }
 
 
