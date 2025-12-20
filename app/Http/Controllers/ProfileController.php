@@ -84,7 +84,8 @@ public function update(Request $request,$id)
     }
     return response()->json([
         'message' => 'Profile updated successfully',
-        'data' => new ProfileResource($profile)
+        'data' => $profile
+        
     ], 200);
 }
    /**
