@@ -45,53 +45,59 @@ class ProfileController extends Controller
  * Update Profile
  */
 public function update(Request $request)
-    {
+{
     $userId = Auth::id();
+
     $data = $request->validate([
-        'name'  => 'required|string|max:225',
+        'name'  => 'sometimes|string|max:225',
         'bio'   => 'sometimes|string',
-        'image' => 'sometimes|image|mimes:jpg,jpeg,png|max:2048' 
+        'image' => 'sometimes|image|mimes:jpg,jpeg,png|max:2048'
     ]);
 
+    try {
+        $profile = Profile::with('image')->where('user_id', $userId)->firstOrFail();
 
-    // $profile = Profile::with('image')->where('user_id', $userId)->first();
-    $profile = Profile::where('user_id', $userId)->first();
-    if (!$profile) {
+        // Update basic fields
+        $profile->update([
+            'name' => $data['name'] ?? $profile->name,
+            'bio'  => $data['bio'] ?? $profile->bio,
+        ]);
+
+        // Handle image upload
+        if ($request->hasFile('image')) {
+            $file = $request->file('image');
+            $filename = (string) Str::uuid() . '.' . $file->extension();
+            $path = $file->storeAs('profiles', $filename, 'public');
+
+            $image = $profile->image;
+
+            if ($image) {
+                // Delete old file if exists
+                if ($image->url && Storage::disk('public')->exists($image->url)) {
+                    Storage::disk('public')->delete($image->url);
+                }
+                $image->update([
+                    'url'  => $path,
+                    'type' => 'profile',
+                ]);
+            } else {
+                $profile->image()->create([
+                    'url'  => $path,
+                    'type' => 'profile',
+                ]);
+            }
+        }
+
+        // Return fresh data including updated image
+        return response()->json([
+            'message' => 'Profile updated successfully',
+            'data' => $profile->fresh('image')
+        ], 200);
+
+    } catch (\Illuminate\Database\Eloquent\ModelNotFoundException $e) {
         return response()->json(['message' => 'Profile not found'], 404);
     }
-    $profile->update([
-        'name' => $data['name'],
-        'bio'  => $data['bio'] ?? $profile->bio,
-    ]);
-
-
-    if ($request->hasFile('image')) {
-        $file = $request->file('image');
-        $ext = $file->extension();
-        $filename = (string) Str::uuid() . '.' . $ext;
-
-        $path = $file->storeAs('profiles', $filename, 'public');
-
-        if ($profile->image) {
-            Storage::disk('public')->delete($profile->image->url);
-            $profile->image->update([
-                'url'  => $path,
-                'type' => 'profile'
-            ]);
-        } else {
-            $profile->image()->create([
-                'url'  => $path,
-                'type' => 'profile'
-            ]);
-        }
-    }
-
-    return response()->json([
-        'message' => 'Profile updated successfully',
-        'data' => $profile
-    ], 200);
 }
-
    /**
  * show Profile 
  */
