@@ -29,7 +29,7 @@ class ProfileController extends Controller
    $file = $request->file('image');
         $ext = $file->extension();  
         $filename = (string) Str::uuid() . '.' . $ext;
-        $path = $file->storeAs('posts' , $filename , 'public');
+        $path = $file->storeAs('profiles' , $filename , 'public');
         $profile->image()->create([
             'url' => $path,
             'type' => 'profile'
