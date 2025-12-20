@@ -53,7 +53,7 @@ public function update(Request $request)
         'image' => 'sometimes|image|mimes:jpg,jpeg,png|max:2048' 
     ]);
 
-    $profile = Profile::where('user_id', $userId)->first();
+    $profile = Profile::with('image')->where('user_id', $userId)->first();
 
     if (!$profile) {
         return response()->json(['message' => 'Profile not found'], 404);
