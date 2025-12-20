@@ -108,7 +108,7 @@ public function update(Request $request)
  * Get all profiles
  */
     public function index(){
-        $profiles = Profile::paginate(5);
+        $profiles = Profile::paginate(50);
             return $this->responseSuccess(
                 ['data' => ProfileResource::collection($profiles),
                 'pagination' => [
