@@ -18,26 +18,27 @@ class ProfileController extends Controller
     /**
  * create Profile 
  */
-   public function store(StoreProfileRequest $request)
+  public function store(StoreProfileRequest $request)
 {
     $userId = Auth::id();
     $data = $request->validated();
 
-    // if(Profile::where('user_id', $userId)->exists()){
-    //     return response()->json(['message' => 'Profile already created'], 200);
-    // }
-
     $data['user_id'] = $userId;
     $profile = Profile::create($data);
 
-    $file = $request->file('image');
-    $filename = (string) Str::uuid() . '.' . $file->extension();
-    $path = $file->storeAs('profiles', $filename, 'public'); // 'profiles/uuid.jpg'
+    // رفع الصورة
+    if ($request->hasFile('image')) {
+        $file = $request->file('image');
+        $filename = (string) Str::uuid() . '.' . $file->extension();
+        $path = $file->storeAs('profiles', $filename, 'public');
 
-    // إنشاء الصورة بدون عمود type
-    $profile->image()->create([
-        'url' => $path
-    ]);
+        $profile->image()->create([
+            'url' => $path
+        ]);
+    }
+
+    // تحميل العلاقة image قبل إرسال الـ resource
+    $profile->load('image');
 
     return response()->json([
         'message' => 'Profile created successfully',
@@ -45,13 +46,11 @@ class ProfileController extends Controller
     ], 201);
 }
 
-
-
-   /**
- * update Profile 
+/**
+ * Update Profile
  */
-    public function update(Request $request)
-    {
+public function update(Request $request)
+{
     $userId = Auth::id();
     $data = $request->validate([
         'name'  => 'required|string|max:225',
@@ -59,39 +58,41 @@ class ProfileController extends Controller
         'image' => 'sometimes|image|mimes:jpg,jpeg,png|max:2048' 
     ]);
 
-    
     $profile = Profile::where('user_id', $userId)->first();
     if (!$profile) {
         return response()->json(['message' => 'Profile not found'], 404);
     }
+
     $profile->update([
         'name' => $data['name'],
         'bio'  => $data['bio'] ?? $profile->bio,
     ]);
 
-   
+    // تحديث أو رفع الصورة
     if ($request->hasFile('image')) {
         $file = $request->file('image');
-        $ext = $file->extension();
-        $filename = (string) Str::uuid() . '.' . $ext;
-
+        $filename = (string) Str::uuid() . '.' . $file->extension();
         $path = $file->storeAs('profiles', $filename, 'public');
 
-        if ($profile->image) {
-            Storage::disk('public')->delete($profile->image->url);
-            $profile->image->update([
-                'url'  => $path,
-            ]);
+        $image = $profile->image;
+
+        if ($image) {
+            // حذف الصورة القديمة
+            if (Storage::disk('public')->exists($image->url)) {
+                Storage::disk('public')->delete($image->url);
+            }
+            $image->update(['url' => $path]);
         } else {
-            $profile->image()->create([
-                'url'  => $path,
-            ]);
+            $profile->image()->create(['url' => $path]);
         }
     }
 
+    // تحميل العلاقة image قبل إعادة الـ resource
+    $profile->load('image');
+
     return response()->json([
         'message' => 'Profile updated successfully',
-        'data' => new ProfileResource($profile->load('image'))
+        'data' => new ProfileResource($profile)
     ], 200);
 }
 
