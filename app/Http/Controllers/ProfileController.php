@@ -24,10 +24,8 @@ class ProfileController extends Controller
     $data = $request->validated();
     $data['user_id'] = $userId;
 
-    // إنشاء الملف الشخصي
     $profile = Profile::create($data);
 
-    // التعامل مع الصورة إذا تم رفعها
     if ($request->hasFile('image')) {
         $file = $request->file('image');
         $filename = (string) Str::uuid() . '.' . $file->extension();
@@ -39,7 +37,6 @@ class ProfileController extends Controller
         ]);
     }
 
-    // إعادة تحميل الملف الشخصي مع الصورة الجديدة
     $profile = $profile->fresh('image');
 
     return response()->json([
