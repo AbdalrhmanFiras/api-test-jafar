@@ -44,8 +44,8 @@ class ProfileController extends Controller
 /**
  * Update Profile
  */
-public function update(Request $request,$id)
-{
+public function update(Request $request)
+    {
     $userId = Auth::id();
     $data = $request->validate([
         'name'  => 'required|string|max:225',
@@ -53,40 +53,44 @@ public function update(Request $request,$id)
         'image' => 'sometimes|image|mimes:jpg,jpeg,png|max:2048' 
     ]);
 
-    // $profile = Profile::with('image')->where('user_id', $userId)->first();
-    $profile = Profile::with('image')->where('id', $id)->first();
 
-    
+    // $profile = Profile::with('image')->where('user_id', $userId)->first();
+    $profile = Profile::where('user_id', $userId)->first();
     if (!$profile) {
         return response()->json(['message' => 'Profile not found'], 404);
     }
-
     $profile->update([
         'name' => $data['name'],
         'bio'  => $data['bio'] ?? $profile->bio,
     ]);
 
+
     if ($request->hasFile('image')) {
         $file = $request->file('image');
-        $filename = (string) Str::uuid() . '.' . $file->extension();
+        $ext = $file->extension();
+        $filename = (string) Str::uuid() . '.' . $ext;
+
         $path = $file->storeAs('profiles', $filename, 'public');
 
-        $image = $profile->image;
-
-        if ($image) {
-            if ($image->url) {
-                Storage::disk('public')->delete($image->url);
-            }
-            $image->update(['url' => $path]);
+        if ($profile->image) {
+            Storage::disk('public')->delete($profile->image->url);
+            $profile->image->update([
+                'url'  => $path,
+                'type' => 'profile'
+            ]);
         } else {
-            $profile->image()->create(['url' => $path]);
+            $profile->image()->create([
+                'url'  => $path,
+                'type' => 'profile'
+            ]);
         }
     }
+
     return response()->json([
         'message' => 'Profile updated successfully',
-        'data' => $profile->fresh('image'),
-
+        'data' => $profile
     ], 200);
+}
 }
    /**
  * show Profile 
