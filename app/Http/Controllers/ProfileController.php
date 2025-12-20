@@ -60,7 +60,7 @@ class ProfileController extends Controller
     ]);
 
     
-    $profile = Profile::with('image')->where('user_id', $userId)->first();
+    $profile = Profile::where('user_id', $userId)->first();
     if (!$profile) {
         return response()->json(['message' => 'Profile not found'], 404);
     }
@@ -93,7 +93,7 @@ class ProfileController extends Controller
 
     return response()->json([
         'message' => 'Profile updated successfully',
-        'data' => new ProfileResource($profile)
+        'data' => new ProfileResource($profile->load('image'))
     ], 200);
 }
 
