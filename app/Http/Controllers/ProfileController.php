@@ -22,25 +22,31 @@ class ProfileController extends Controller
 {
     $userId = Auth::id();
     $data = $request->validated();
-
     $data['user_id'] = $userId;
+
+    // إنشاء الملف الشخصي
     $profile = Profile::create($data);
 
-   $file = $request->file('image');
-        $ext = $file->extension();  
-        $filename = (string) Str::uuid() . '.' . $ext;
-        $path = $file->storeAs('profiles' , $filename , 'public');
+    // التعامل مع الصورة إذا تم رفعها
+    if ($request->hasFile('image')) {
+        $file = $request->file('image');
+        $filename = (string) Str::uuid() . '.' . $file->extension();
+        $path = $file->storeAs('profiles', $filename, 'public');
+
         $profile->image()->create([
-            'url' => $path,
+            'url'  => $path,
             'type' => 'profile'
         ]);
+    }
+
+    // إعادة تحميل الملف الشخصي مع الصورة الجديدة
+    $profile = $profile->fresh('image');
 
     return response()->json([
-        'message' => 'Profile created successfully',
+        'message' => 'تم إنشاء الملف الشخصي بنجاح',
         'data' => new ProfileResource($profile)
     ], 201);
 }
-
 /**
  * Update Profile
  */
