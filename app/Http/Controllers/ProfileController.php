@@ -44,7 +44,7 @@ class ProfileController extends Controller
 /**
  * Update Profile
  */
-public function update($id,$request)
+public function update(Request $request,$id)
 {
     $userId = Auth::id();
     $data = $request->validate([
@@ -54,9 +54,9 @@ public function update($id,$request)
     ]);
 
     // $profile = Profile::with('image')->where('user_id', $userId)->first();
-        $profile = Profile::with('image')->where('id', $id)->first();
+    $profile = Profile::with('image')->where('id', $id)->first();
 
-
+    
     if (!$profile) {
         return response()->json(['message' => 'Profile not found'], 404);
     }
