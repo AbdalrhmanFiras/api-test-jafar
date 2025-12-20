@@ -71,20 +71,20 @@ class ProfileController extends Controller
 
         $path = $file->storeAs('profiles', $filename, 'public');
 
-      $image = $profile->image; 
-
-    if ($image) {
-        if (Storage::disk('public')->exists($image->url)) {
-            Storage::disk('public')->delete($image->url);
+        if ($profile->image) {
+            Storage::disk('public')->delete($profile->image->url);
+            $profile->image->update([
+                'url'  => $path,
+                'type' => 'profile'
+            ]);
+        } else {
+            $profile->image()->create([
+                'url'  => $path,
+                'type' => 'profile'
+            ]);
         }
+    }
 
-        $image->update([
-            'url' => $path,
-        ]);
-    } else {
-        $profile->image()->create([
-            'url' => $path,
-        ]);
     return response()->json([
         'message' => 'Profile updated successfully',
         'data' => new ProfileResource($profile)
