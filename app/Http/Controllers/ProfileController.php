@@ -54,36 +54,34 @@ public function update(Request $request)
     ]);
 
     $profile = Profile::where('user_id', $userId)->first();
-    if (!$profile) {
-        return response()->json(['message' => 'Profile not found'], 404);
-    }
+    // if (!$profile) {
+    //     return response()->json(['message' => 'Profile not found'], 404);
+    // }
 
     $profile->update([
         'name' => $data['name'],
         'bio'  => $data['bio'] ?? $profile->bio,
     ]);
 
-    // تحديث أو رفع الصورة
-    if ($request->hasFile('image')) {
-        $file = $request->file('image');
-        $filename = (string) Str::uuid() . '.' . $file->extension();
-        $path = $file->storeAs('profiles', $filename, 'public');
+    if($request->hasFile('image')){
+            $file = $request->file('image');
+            
+            $ext = $file->extension();
+            $filename = (string) Str::uuid() . '.' . $ext;
+         
 
-        $image = $profile->image;
+         $path = $file->storeAs('profiles' , $filename,'public');
+         $image = $profile->image;
 
         if ($image) {
-            // حذف الصورة القديمة
-            if (Storage::disk('public')->exists($image->url)) {
-                Storage::disk('public')->delete($image->url);
-            }
-            $image->update(['url' => $path]);
+            Storage::disk('public')->delete($image->url);
+            $profile->update(['url' => $path]);
         } else {
             $profile->image()->create(['url' => $path]);
         }
-    }
 
-    // تحميل العلاقة image قبل إعادة الـ resource
-    $profile->load('image');
+    }
+        $profile->update($data);
 
     return response()->json([
         'message' => 'Profile updated successfully',
