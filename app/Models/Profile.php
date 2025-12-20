@@ -16,8 +16,7 @@ class Profile extends Model
 
     public function image(){
         return $this->morphOne(Image::class , 'imageable');
-    }
-
+    }    
     //  public function getImageUrlAttribute()
     // {
     //     return $this->image ? $this->image->url : null;

@@ -102,9 +102,9 @@ class ProfileController extends Controller
     }
 
     $data = $profile->toArray();
-    if ($profile->image) {
-        $data['image_url'] = $profile->image->url; 
-    }
+    // if ($profile->image) {
+    //     $data['image_url'] = $profile->image->url; 
+    // }
 
     return response()->json([
         'message' => 'Profile fetched successfully',
