@@ -24,9 +24,9 @@ class ProfileController extends Controller
             'bio' => 'nullable|string',
             'image'=> 'required|image|mimes:jpg,jpeg,png|max:2048'
         ]);
-        if($profileCheck = Profile::where('user_id' , $userId)->first()){
-            return response()->json(['message' => 'profile already created'] , 200);
-        }
+        // if($profileCheck = Profile::where('user_id' , $userId)->first()){
+        //     return response()->json(['message' => 'profile already created'] , 200);
+        // }
         $data['user_id'] = $userId;
         $profile = Profile::create($data);
         $file = $request->file('image');

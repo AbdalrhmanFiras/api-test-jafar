@@ -4,7 +4,6 @@ namespace App\Models;
 
 use App\Models\Image;
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Support\Facades\Storage;
 
 class Profile extends Model
 {
@@ -18,9 +17,8 @@ class Profile extends Model
     public function image(){
         return $this->morphOne(Image::class , 'imageable');
     }    
-    public function getUrlAttribute($value)
-{
-    if (!$value) return null;
-    return url(Storage::url($value)); 
-}
+     public function getImageUrlAttribute()
+    {
+        return $this->image ? $this->image->url : null;
+    }
 }
