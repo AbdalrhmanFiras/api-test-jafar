@@ -41,10 +41,9 @@ Route::middleware('auth:api')->group(function(){
 });
 
 
+Route::post('/profile/{profileId}' , [ProfileController::class , 'update'])->middleware('auth:api');
 Route::post('/profile' , [ProfileController::class , 'store'])
 ->middleware('auth:api');
 Route::get('/profile/' , [ProfileController::class , 'show'])
-->middleware('auth:api');
-Route::post('/profile/{profileId}' , [ProfileController::class , 'update'])
 ->middleware('auth:api');
 Route::get('/profile/all' , [ProfileController::class , 'index']);
