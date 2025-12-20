@@ -59,13 +59,11 @@ public function update(Request $request)
         return response()->json(['message' => 'Profile not found'], 404);
     }
 
-    // Update name and bio
     $profile->update([
         'name' => $data['name'],
         'bio'  => $data['bio'] ?? $profile->bio,
     ]);
 
-    // Handle image upload
     if ($request->hasFile('image')) {
         $file = $request->file('image');
         $filename = (string) Str::uuid() . '.' . $file->extension();
@@ -74,7 +72,6 @@ public function update(Request $request)
         $image = $profile->image;
 
         if ($image) {
-            // Delete old file if exists
             if ($image->url) {
                 Storage::disk('public')->delete($image->url);
             }
@@ -83,7 +80,6 @@ public function update(Request $request)
             $profile->image()->create(['url' => $path]);
         }
     }
-
     return response()->json([
         'message' => 'Profile updated successfully',
         'data' => new ProfileResource($profile)
