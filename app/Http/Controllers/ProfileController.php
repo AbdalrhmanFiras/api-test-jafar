@@ -81,12 +81,10 @@ class ProfileController extends Controller
             Storage::disk('public')->delete($profile->image->url);
             $profile->image->update([
                 'url'  => $path,
-                'type' => 'profile'
             ]);
         } else {
             $profile->image()->create([
                 'url'  => $path,
-                'type' => 'profile'
             ]);
         }
     }
