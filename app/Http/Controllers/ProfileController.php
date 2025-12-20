@@ -91,7 +91,7 @@ public function update(Request $request)
         'data' => $profile
     ], 200);
 }
-}
+
    /**
  * show Profile 
  */
