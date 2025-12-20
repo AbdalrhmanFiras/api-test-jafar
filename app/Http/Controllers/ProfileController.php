@@ -84,8 +84,8 @@ public function update(Request $request,$id)
     }
     return response()->json([
         'message' => 'Profile updated successfully',
-        'data' => $profile
-        
+        'data' => $profile->fresh('image'),
+
     ], 200);
 }
    /**
