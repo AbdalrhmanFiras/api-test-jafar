@@ -53,7 +53,7 @@ class ProfileController extends Controller
     ]);
 
     
-    $profile = Profile::where('user_id', $userId)->first();
+    $profile = Profile::with('image')->where('user_id', $userId)->first();
     if (!$profile) {
         return response()->json(['message' => 'Profile not found'], 404);
     }
@@ -86,7 +86,7 @@ class ProfileController extends Controller
 
     return response()->json([
         'message' => 'Profile updated successfully',
-        'data' => $profile->load('image')
+        'data' => $profile
     ], 200);
 }
 
@@ -101,10 +101,9 @@ class ProfileController extends Controller
         return response()->json(['message' => 'Profile not found'], 404);
     }
 
-    // Include full URL from the image relationship
     $data = $profile->toArray();
     if ($profile->image) {
-        $data['image_url'] = $profile->image->url; // accessor on Image model will generate full URL
+        $data['image_url'] = $profile->image->url; 
     }
 
     return response()->json([
