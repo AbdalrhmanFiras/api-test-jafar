@@ -26,19 +26,14 @@ class ProfileController extends Controller
     $data['user_id'] = $userId;
     $profile = Profile::create($data);
 
-    // رفع الصورة
-    if ($request->hasFile('image')) {
-        $file = $request->file('image');
-        $filename = (string) Str::uuid() . '.' . $file->extension();
-        $path = $file->storeAs('profiles', $filename, 'public');
-
+   $file = $request->file('image');
+        $ext = $file->extension();  
+        $filename = (string) Str::uuid() . '.' . $ext;
+        $path = $file->storeAs('posts' , $filename , 'public');
         $profile->image()->create([
-            'url' => $path
+            'url' => $path,
+            'type' => 'profile'
         ]);
-    }
-
-    // تحميل العلاقة image قبل إرسال الـ resource
-    $profile->load('image');
 
     return response()->json([
         'message' => 'Profile created successfully',
