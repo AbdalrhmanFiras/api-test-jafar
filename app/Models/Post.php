@@ -9,6 +9,8 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 class Post extends Model
 {
     use HasFactory;
+     protected $appends = ['image_url'];
+
     protected $guarded = ['id'];
 
     public function users(){
@@ -27,23 +29,28 @@ class Post extends Model
         return $this->morphOne(Image::class , 'imageable');
     }
 
-
-    public static function boot(){
-        parent::boot();
-
-        // static::created(function($model){// after 
-        //     $model->dec = 'from created boot';
-        //     $model->save();
-        // });
-        // static::creating(function($model){// durning the creation 
-        //     $model->dec = 'from creating boot';
-        // });
-        // static::saving(function($model){// durning the creation 
-        //     $model->dec = 'from saving boot';
-        // });
-
-        static::replicating(function($model){
-            $model->dec = 'dec 2';
-        });
+      public function getImageUrlAttribute()
+    {
+        return $this->image ? $this->image->url : null;
     }
+
+
+    // public static function boot(){
+    //     parent::boot();
+
+    //     // static::created(function($model){// after 
+    //     //     $model->dec = 'from created boot';
+    //     //     $model->save();
+    //     // });
+    //     // static::creating(function($model){// durning the creation 
+    //     //     $model->dec = 'from creating boot';
+    //     // });
+    //     // static::saving(function($model){// durning the creation 
+    //     //     $model->dec = 'from saving boot';
+    //     // });
+
+    //     static::replicating(function($model){
+    //         $model->dec = 'dec 2';
+    //     });
+    // }
 }

@@ -27,7 +27,7 @@ Route::middleware('auth:api')->group(function () {
     Route::get('/post/comment', [CommentController::class, 'index']);//work
     Route::post('/post/{postId}/comment', [CommentController::class, 'store']);//
     // Post routes with parameters
-    Route::put('/post/{Id}', [PostController::class, 'edit'])->withoutMiddleware('auth:api');
+    Route::post('/post/{Id}', [PostController::class, 'update'])->withoutMiddleware('auth:api');
     Route::get('/post/{Id}', [PostController::class, 'show']);
     Route::delete('/post/{Id}', [PostController::class, 'delete']);
 });

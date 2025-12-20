@@ -4,10 +4,13 @@ namespace App\Http\Controllers;
 
 use Exception;
 use App\Models\Post;
+use Illuminate\Support\Str;
 use Illuminate\Http\Request;
 use App\Http\Resources\PostResource;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
+use Illuminate\Support\Facades\Storage;
+
 /**
  * @tags Post Endpoint
  */
@@ -21,33 +24,60 @@ class PostController extends Controller
             'name'    => 'required|string',
             'dec'     => 'required|string',
             'comment' => 'nullable|string',
-            'like'    => 'nullable|string'
+            'like'    => 'nullable|string',
+            'image'=> 'required|image|mimes:jpg,jpeg,png|max:2048'
+
         ]);
         $user = Auth::id();
         $data['user_id'] = $user;
         $post = Post::create($data);
-        
-         return $this->responseSuccess($post, 'post created successfully'  , 201);
+        $file = $request->file('image');
+        $ext = $file->extension();  
+        $filename = (string) Str::uuid() . '.' . $ext;
+        $path = $file->storeAs('posts' , $filename , 'public');
+        $post->image()->create([
+            'url' => $path,
+            'type' => 'post'
+        ]);
+         return $this->responseSuccess(new PostResource($post), 'post created successfully'  , 201);
      }
 
     /**
      * Edit(update) post
      */
 
-    public function edit(Request $request , $id){
+    public function update(Request $request , $id){
  
         try{
-
         $data = $request->validate([
          'name' => 'sometimes|string',
          'dec' => 'sometimes|string', 
          'comment' => 'sometimes|string', 
-         'like' => 'sometimes|string', 
+         'like' => 'sometimes|string',
+         'image'  => 'sometimes|image|mimes:png,jpeg,jpg|max:2048'
          ]);
         $post = Post::findorFail($id);
+
+         if($request->hasFile('image')){
+            $file = $request->file('image');
+            
+            $ext = $file->extension();
+            $filename = (string) Str::uuid() . '.' . $ext;
+         
+
+         $path = $file->storeAs('posts' , $filename,'public');
+        $image = $post->image;
+
+        if ($image) {
+            Storage::disk('public')->delete($image->url);
+            $image->update(['url' => $path]);
+        } else {
+            $post->image()->create(['url' => $path]);
+        }
+
+    }
         $post->update($data);
-         $post->save($data);
-         return $this->responseSuccess($post, 'post updated successfully');
+         return $this->responseSuccess(new PostResource($post), 'post updated successfully');
         }catch(ModelNotFoundException){
           return $this->responseError(null,'post not found', 404);
         }
@@ -58,6 +88,14 @@ class PostController extends Controller
     public function delete($id){
         try{
             $post = Post::findOrFail($id);
+            $image = $post->image;
+           if ($image) {
+            $filePath = $image->url; // يجب أن يكون مثل 'posts/abc123.jpg'
+        if (Storage::disk('public')->exists($filePath)) {
+            Storage::disk('public')->delete($filePath);
+        }
+    $image->delete();
+}
             $post->delete();
             return $this->responseSuccess([],'Posts deleted successfully', 200);
         }catch(ModelNotFoundException){
@@ -72,7 +110,7 @@ class PostController extends Controller
     public function index(){
 
         try{
-            $posts = Post::with('comments')->paginate(10);
+            $posts = Post::with('comments')->paginate(50);
             return $this->responseSuccess(
                 ['data' => PostResource::collection($posts),
                 'pagination' => [
@@ -80,7 +118,7 @@ class PostController extends Controller
                     'last_page' => $posts->lastPage(),
                     'per_page' => $posts->perPage(),
                     'total' => $posts->total(),
-                    ]],$posts ?'Posts fetched successfully' : 'No posts found' , 200);
+                    ]],PostResource::collection($posts) ?'Posts fetched successfully' : 'No posts found' , 200);
         }catch (Exception $e) {
         return $this->responseError(null,
             'Something went wrong',500,
