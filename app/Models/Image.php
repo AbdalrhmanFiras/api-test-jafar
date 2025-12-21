@@ -17,7 +17,7 @@ public function getUrlAttribute($value)
 {
     if (!$value) return null;
 
-    $appUrl = env('APP_URL', 'http://127.0.0.1'); 
+    $appUrl = env('APP_URL', 'https://a04wg0wwccosgc4kk40kkwo8.168.231.110.172.sslip.io');
     return rtrim($appUrl, '/') . '/storage/' . $value;
 }
 
