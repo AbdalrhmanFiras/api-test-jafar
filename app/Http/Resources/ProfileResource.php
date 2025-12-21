@@ -12,7 +12,7 @@ class ProfileResource extends JsonResource
             'id'         => $this->id,
             'name'       => $this->name,
             'bio'        => $this->bio,
-            'email'     => $this->email,
+            'email'     => $this->user ? $this->user->email:null,
             'phone'          => $this->phone,
             'age'          => $this->age,
             'country'          => $this->country,
@@ -23,4 +23,5 @@ class ProfileResource extends JsonResource
             }), 
         ];
     }
+    
 }
