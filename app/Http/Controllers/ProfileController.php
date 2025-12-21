@@ -21,7 +21,7 @@ class ProfileController extends Controller
  */
   public function store(StoreProfileRequest $request)
 {
-    
+
     $user = Auth::user();
     $data = $request->validated();
     $data['user_id'] = $user->id;
