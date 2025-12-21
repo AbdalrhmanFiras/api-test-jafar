@@ -24,7 +24,7 @@ class ProfileController extends Controller
     $user = Auth::user();
     $data = $request->validated();
     $data['user_id'] = $user->id;
-    $data['email'] = $email->email;
+    $data['email'] = $user->email;
 
     $profile = Profile::create($data);
 
