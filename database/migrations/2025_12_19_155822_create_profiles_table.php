@@ -15,8 +15,11 @@ return new class extends Migration
             $table->id();
             $table->string('name');
             $table->text('bio')->nullable();
+            $table->string('city');
+            $table->string('country');
+            $table->string('phone');
+            $table->integer('age');
             $table->foreignId('user_id')->constrained('users')->cascadeOnDelete();
-            // $table->string('image_url')->nullable();
             $table->timestamps();
         });
     }

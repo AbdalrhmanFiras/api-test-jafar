@@ -1,6 +1,7 @@
 <?php
 
 namespace App\Http\Controllers;
+use App\Models\User;
 use App\Models\Profile;
 use Illuminate\Support\Str;
 use Illuminate\Http\Request;
@@ -21,8 +22,10 @@ class ProfileController extends Controller
   public function store(StoreProfileRequest $request)
 {
     $userId = Auth::id();
+    $email = User::where('id' , $userId)->value('email');
     $data = $request->validated();
     $data['user_id'] = $userId;
+    $data['email'] = $email;
 
     $profile = Profile::create($data);
 
@@ -54,6 +57,10 @@ public function update(Request $request)
     $data = $request->validate([
         'name'  => 'sometimes|string|max:225',
         'bio'   => 'sometimes|string',
+        'age' => 'sometimes|integer', 
+        'phone' => 'sometimes|string|min:5', 
+        'country' => 'sometimes|string', 
+        'city' => 'sometimes|string', 
         'image' => 'sometimes|image|mimes:jpg,jpeg,png|max:2048'
     ]);
 
@@ -64,9 +71,12 @@ public function update(Request $request)
         $profile->update([
             'name' => $data['name'] ?? $profile->name,
             'bio'  => $data['bio'] ?? $profile->bio,
+            'age'  => $data['age'] ?? $profile->age,
+            'city'  => $data['city'] ?? $profile->city,
+            'country'  => $data['country'] ?? $profile->country,
+            'phone'  => $data['phone'] ?? $profile->phone,
         ]);
 
-        // Handle image upload
         if ($request->hasFile('image')) {
             $file = $request->file('image');
             $filename = (string) Str::uuid() . '.' . $file->extension();
@@ -75,7 +85,6 @@ public function update(Request $request)
             $image = $profile->image;
 
             if ($image) {
-                // Delete old file if exists
                 if ($image->url && Storage::disk('public')->exists($image->url)) {
                     Storage::disk('public')->delete($image->url);
                 }
@@ -90,8 +99,6 @@ public function update(Request $request)
                 ]);
             }
         }
-
-        // Return fresh data including updated image
         return response()->json([
             'message' => 'Profile updated successfully',
             'data' => $profile->fresh('image')

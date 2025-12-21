@@ -12,6 +12,11 @@ class ProfileResource extends JsonResource
             'id'         => $this->id,
             'name'       => $this->name,
             'bio'        => $this->bio,
+            'email'     => $this->email,
+            'phone'          => $this->phone,
+            'age'          => $this->age,
+            'country'          => $this->country,
+            'city'          => $this->city,
             'user_id'    => $this->user_id,
             'image_url'  => $this->when($this->image_url ,function(){
                 return $this->image_url;
