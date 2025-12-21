@@ -13,9 +13,11 @@ class Image extends Model
         return $this->morphTo();
     }
 
-       public function getUrlAttribute($value)
-    {
-        return asset('storage/' . $value);
-    }
+     public function getUrlAttribute($value)
+{
+    if (!$value) return null;
+
+    return url('storage/' . $value);
+}
 
 }
