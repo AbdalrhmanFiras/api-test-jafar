@@ -21,11 +21,10 @@ class ProfileController extends Controller
  */
   public function store(StoreProfileRequest $request)
 {
-    $userId = Auth::id();
-    $email = User::where('id' , $userId)->value('email');
+    $user = Auth::user();
     $data = $request->validated();
-    $data['user_id'] = $userId;
-    $data['email'] = $email;
+    $data['user_id'] = $user->id;
+    $data['email'] = $email->email;
 
     $profile = Profile::create($data);
 
