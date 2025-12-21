@@ -17,9 +17,8 @@ public function getUrlAttribute($value)
 {
     if (!$value) return null;
 
-    // إجبار استخدام الدومين الحالي أو APP_URL إذا موجود
-    $base = request()->getSchemeAndHttpHost() ?? env('APP_URL', '');
-    return rtrim($base, '/') . '/storage/' . $value;
+    $appUrl = env('APP_URL', 'http://127.0.0.1'); 
+    return rtrim($appUrl, '/') . '/storage/' . $value;
 }
 
 }
