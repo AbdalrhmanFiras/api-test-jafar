@@ -10,8 +10,8 @@ services:
     volumes:
       - .:/var/www/html
     environment:
-      APP_ENV: production
-      APP_DEBUG: true
+      APP_ENV: local
+      APP_DEBUG: false
       APP_KEY: base64:qjtj5S8UiQKUMs6aDOzCWmxZbF2Q7W7voJAIx8xMX5I=
       APP_URL: http://a04wg0wwccosgc4kk40kkwo8.168.231.110.172.sslip.io/
       DB_CONNECTION: mysql
