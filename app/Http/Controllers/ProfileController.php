@@ -26,7 +26,7 @@ class ProfileController extends Controller
 
     $profile = Profile::create($data);
 
-    if ($request->hasFile('image')) {
+    if($request->hasFile('image')) {
         $file = $request->file('image');
         $filename = (string) Str::uuid() . '.' . $file->extension();
         $path = $file->storeAs('profiles', $filename, 'public');
@@ -40,7 +40,7 @@ class ProfileController extends Controller
     $profile = $profile->fresh('image');
 
     return response()->json([
-        'message' => 'تم إنشاء الملف الشخصي بنجاح',
+        'message' => 'Profile created successfully',
         'data' => new ProfileResource($profile)
     ], 201);
 }
