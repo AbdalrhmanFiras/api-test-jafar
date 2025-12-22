@@ -27,11 +27,11 @@ class ProfileController extends Controller
     $data['user_id'] = $user->id;
     $data['email'] = $user->email;
 
-    $profile = Profile::create($data);
-    if(Profile::exists())
+    if(Profile::where('user_id' , $user->id)->exists())
     {
         return $this->responseError(null,'Profile already created' , 200);
     }
+    $profile = Profile::create($data);
     if($request->hasFile('image')) {
         $file = $request->file('image');
         $filename = (string) Str::uuid() . '.' . $file->extension();
