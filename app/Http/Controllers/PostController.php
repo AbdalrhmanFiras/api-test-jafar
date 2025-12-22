@@ -90,7 +90,7 @@ class PostController extends Controller
             $post = Post::findOrFail($id);
             $image = $post->image;
            if ($image) {
-            $filePath = $image->url; // يجب أن يكون مثل 'posts/abc123.jpg'
+            $filePath = $image->url; 
         if (Storage::disk('public')->exists($filePath)) {
             Storage::disk('public')->delete($filePath);
         }
