@@ -16,7 +16,7 @@ use App\Http\Requests\StoreProfileRequest;
 class ProfileController extends Controller
 {
 
-    /**
+/**
  * create Profile 
  */
   public function store(StoreProfileRequest $request)
@@ -108,7 +108,7 @@ public function update(Request $request)
         return response()->json(['message' => 'Profile not found'], 404);
     }
 }
-   /**
+/**
  * show Profile 
  */
    public function show(){ 
