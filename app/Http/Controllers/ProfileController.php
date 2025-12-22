@@ -67,7 +67,6 @@ public function update(Request $request)
     try {
         $profile = Profile::with('image')->where('user_id', $userId)->firstOrFail();
 
-        // Update basic fields
         $profile->update([
             'name' => $data['name'] ?? $profile->name,
             'bio'  => $data['bio'] ?? $profile->bio,
@@ -99,9 +98,13 @@ public function update(Request $request)
                 ]);
             }
         }
+       
+            $profile = $profile->fresh('image');
+
+
         return response()->json([
             'message' => 'Profile updated successfully',
-            'data' => $profile->fresh('image')
+            'data' => new ProfileResource($profile)
         ], 200);
 
     } catch (\Illuminate\Database\Eloquent\ModelNotFoundException $e) {

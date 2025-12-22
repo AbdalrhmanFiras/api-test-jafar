@@ -18,7 +18,9 @@ class ProfileResource extends JsonResource
             'country'          => $this->country,
             'city'          => $this->city,
             'user_id'    => $this->user_id,
-            'image_url'  => $this->image_url, 
+            'image_url'  => $this->when($this->image_url ,function(){
+                return $this->image_url;
+            }), 
         ];
     }
 }
