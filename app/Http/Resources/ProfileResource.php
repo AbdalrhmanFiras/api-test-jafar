@@ -12,7 +12,7 @@ class ProfileResource extends JsonResource
             'id'         => $this->id,
             'name'       => $this->name,
             'bio'        => $this->bio,
-            'email'     => $this->user ,
+            'email'     => $this->user->email ,
             'phone'          => $this->phone,
             'age'          => $this->age,
             'country'          => $this->country,
