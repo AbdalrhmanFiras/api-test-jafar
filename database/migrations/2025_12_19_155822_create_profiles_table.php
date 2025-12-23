@@ -20,6 +20,8 @@ return new class extends Migration
             $table->string('phone');
             $table->integer('age');
             $table->foreignId('user_id')->constrained('users')->cascadeOnDelete();
+            $table->string('language')->nullable();
+            $table->string('gender')->nullable();
             $table->timestamps();
         });
     }

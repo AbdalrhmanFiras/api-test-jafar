@@ -64,6 +64,8 @@ public function update(Request $request)
         'phone' => 'sometimes|string|min:5', 
         'country' => 'sometimes|string', 
         'city' => 'sometimes|string', 
+         'gender' => 'sometimes|in:male,female',
+        'language' => 'sometimes|string',
         'image' => 'sometimes|image|mimes:jpg,jpeg,png|max:2048'
     ]);
 
@@ -77,6 +79,8 @@ public function update(Request $request)
             'city'  => $data['city'] ?? $profile->city,
             'country'  => $data['country'] ?? $profile->country,
             'phone'  => $data['phone'] ?? $profile->phone,
+            'gender'  => $data['gender'] ?? $profile->gender,
+            'language'  => $data['language'] ?? $profile->language,
         ]);
 
         if ($request->hasFile('image')) {

@@ -15,6 +15,8 @@ class ProfileResource extends JsonResource
             'email'     => $this->user->email ,
             'phone'          => $this->phone,
             'age'          => $this->age,
+            'gender'        => $this->gender,
+            'language'        => $this->language,
             'country'          => $this->country,
             'city'          => $this->city,
             'user_id'    => $this->user_id,

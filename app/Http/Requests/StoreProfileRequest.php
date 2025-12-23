@@ -28,6 +28,8 @@ class StoreProfileRequest extends FormRequest
         'phone' => 'nullable|string|min:5', 
         'country' => 'nullable|string', 
         'city' => 'nullable|string', 
+        'gender' => 'nullable|in:male,female',
+        'language' => 'nullable|string',
         'image'=> 'required|image|mimes:jpg,jpeg,png|max:2048'
         ];
     }
