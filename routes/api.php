@@ -23,10 +23,9 @@ Route::get('/post', [PostController::class, 'index'])->withoutMiddleware('auth:a
 
 Route::middleware('auth:api')->group(function () {
     Route::post('/post', [PostController::class, 'store']);
-    // Comment routes must come BEFORE parameterized post routes to avoid route conflicts
     Route::get('/post/comment', [CommentController::class, 'index']);//work
     Route::post('/post/{postId}/comment', [CommentController::class, 'store']);//
-    // Post routes with parameters
+    Route::get('/post/myposts', [PostController::class, 'myPosts']);
     Route::post('/post/{Id}', [PostController::class, 'update'])->withoutMiddleware('auth:api');
     Route::get('/post/{Id}', [PostController::class, 'show']);
     Route::delete('/post/{Id}', [PostController::class, 'delete']);

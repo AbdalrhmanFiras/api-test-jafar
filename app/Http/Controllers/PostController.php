@@ -138,5 +138,30 @@ class PostController extends Controller
         }
 
     }
+    /**
+     * get all user posts
+     */
+       public function myPosts(){
+
+            $posts = Post::where('user_id' , Auth::id())->paginate(10);
+            if($posts->isEmpty()){
+                return $this->responseError(null , 'no post yet.', 404);
+            }
+            return $this->responseSuccess(['data' => PostResource::collection($posts),
+             'pagination' => [
+                    'current_page' => $posts->currentPage(),
+                    'last_page' => $posts->lastPage(),
+                    'per_page' => $posts->perPage(),
+                    'total' => $posts->total(),
+                    ]
+            ] , 'Posts fetched successfully' , 200);
+        }
+
+
+
+        
+
+
+
 
 }
