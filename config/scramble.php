@@ -89,8 +89,9 @@ return [
      * ],
      * ```
      */
-    'servers' => null,
-
+'servers' => [
+    'local' => env('APP_URL') . '/api',
+],
     /**
      * Determines how Scramble stores the descriptions of enum cases.
      * Available options:
