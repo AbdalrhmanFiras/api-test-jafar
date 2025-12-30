@@ -4,14 +4,12 @@ namespace App\Http\Controllers;
 
 use Exception;
 use App\Models\Post;
-use App\Models\Profile;
 use Illuminate\Support\Str;
 use Illuminate\Http\Request;
 use App\Http\Resources\PostResource;
 use Illuminate\Support\Facades\Auth;
-use App\Http\Resources\ProfileResource;
-use Illuminate\Support\Facades\Storage;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
+use Illuminate\Support\Facades\Storage;
 
 /**
  * @tags Post Endpoint
@@ -24,7 +22,7 @@ class PostController extends Controller
      public function store(Request $request){
         $data = $request->validate([
             'name'    => 'required|string',
-            'dec'     => 'required|string',
+            'dec'     => 'required|string|',
             'comment' => 'nullable|string',
             'like'    => 'nullable|string',
             'image'=> 'required|image|mimes:jpg,jpeg,png|max:2048'
@@ -144,12 +142,12 @@ class PostController extends Controller
      * get all user posts
      */
        public function myPosts(){
-            $user = Auth::id();
-            $posts = Post::where('user_id' , $user)->paginate(10);
+        
+            $posts = Post::where('user_id' , Auth::id())->paginate(10);
             if($posts->isEmpty()){
                 return $this->responseError(null , 'no post yet.', 404);
             }
-            return $this->responseSuccess(['data' => [PostResource::collection($posts),new ProfileResource(Profile::find($user))],
+            return $this->responseSuccess(['data' => PostResource::collection($posts),
              'pagination' => [
                     'current_page' => $posts->currentPage(),
                     'last_page' => $posts->lastPage(),
