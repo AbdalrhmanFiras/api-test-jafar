@@ -149,7 +149,7 @@ class PostController extends Controller
             if($posts->isEmpty()){
                 return $this->responseError(null , 'no post yet.', 404);
             }
-            return $this->responseSuccess(['data' => [PostResource::collection($posts),new ProfileResource(Profile::id($user))],
+            return $this->responseSuccess(['data' => [PostResource::collection($posts),new ProfileResource(Profile::find($user))],
              'pagination' => [
                     'current_page' => $posts->currentPage(),
                     'last_page' => $posts->lastPage(),
