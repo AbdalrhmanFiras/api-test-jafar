@@ -19,9 +19,9 @@ class PostResource extends JsonResource
             'id' => $this->id,
             'name' => $this->name,
             'dec' => $this->dec,
-             'images' => $this->when(
-        $this->images && $this->images->isNotEmpty(),
-        fn () => $this->images->pluck('url')
+             'image' => $this->when(
+        $this->image && $this->image->isNotEmpty(),
+        fn () => $this->image->pluck('url')
                 ),
               'profile_name' => $this->when(
         $this->user && $this->user->profile,

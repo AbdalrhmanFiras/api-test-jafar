@@ -126,7 +126,7 @@ class PostController extends Controller
         );
         }catch (Exception $e) {
         return $this->responseError(null,
-            'Something went wrong',500
+            'Something went wrong',500,['hi']
         );
     }
     }
