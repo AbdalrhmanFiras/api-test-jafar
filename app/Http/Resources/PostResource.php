@@ -19,8 +19,14 @@ class PostResource extends JsonResource
             'id' => $this->id,
             'name' => $this->name,
             'dec' => $this->dec,
-            'profile_image' => $this->user->profile->name,
-            'profile' => $this->image->pluck('url'),
+             'images' => $this->when(
+        $this->images && $this->images->isNotEmpty(),
+        fn () => $this->images->pluck('url')
+                ),
+              'profile_name' => $this->when(
+        $this->user && $this->user->profile,
+        fn () => $this->user->profile->name
+               ),
             'image_url' => $this->when($this->image_url , function(){return $this->image_url;}),
             'comments' => $this->when($this->comments && $this->comments->isNotEmpty(), function() {
            return CommentResource::collection($this->comments);
