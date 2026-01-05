@@ -75,6 +75,7 @@ return [
         'layout' => 'responsive',
     ],
 
+
     /*
      * The list of servers of the API. By default, when `null`, server URL will be created from
      * `scramble.api_path` and `scramble.api_domain` config variables. When providing an array, you

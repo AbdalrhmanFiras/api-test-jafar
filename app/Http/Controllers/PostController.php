@@ -111,6 +111,7 @@ class PostController extends Controller
 
         try{
             $posts = Post::with('comments')->paginate(50);
+        
             return $this->responseSuccess(
                 ['data' => PostResource::collection($posts),
                 'pagination' => [
@@ -156,12 +157,6 @@ class PostController extends Controller
                     ]
             ] , 'Posts fetched successfully' , 200);
         }
-
-
-
         
-
-
-
-
+ 
 }
