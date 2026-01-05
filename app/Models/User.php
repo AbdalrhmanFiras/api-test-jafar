@@ -8,7 +8,7 @@ use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Tymon\JWTAuth\Contracts\JWTSubject;
 
-use function Pest\Laravel\post;
+use App\Models\Post;
 
 class User extends Authenticatable implements JWTSubject
 {
