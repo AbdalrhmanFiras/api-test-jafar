@@ -111,14 +111,19 @@ class PostController extends Controller
 
         try{
             $posts = Post::with(['comments','image','users.profile'])->paginate(50);
-            return $this->responseSuccess(
-                ['data' => PostResource::collection($posts),
+        return $this->responseSuccess(
+            [
+                'data' => PostResource::collection($posts),
                 'pagination' => [
                     'current_page' => $posts->currentPage(),
                     'last_page' => $posts->lastPage(),
                     'per_page' => $posts->perPage(),
                     'total' => $posts->total(),
-                    ]],PostResource::collection($posts) ?'Posts fetched successfully' : 'No posts found' ,200);
+                ]
+            ],
+            $posts->count() ? 'Posts fetched successfully' : 'No posts found',
+            200
+        );
         }catch (Exception $e) {
         return $this->responseError(null,
             'Something went wrong',500,
