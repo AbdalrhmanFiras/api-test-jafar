@@ -33,8 +33,6 @@ class CommentController extends Controller
     return $this->responseSuccess($comment,'Comment Added Successfully' ,201);
     }
 
-
-
      /**
      * Get all youre Comments 
      */

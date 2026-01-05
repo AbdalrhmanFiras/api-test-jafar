@@ -110,7 +110,7 @@ class PostController extends Controller
     public function index(){
 
         try{
-            $posts = Post::with(['comments','image','user.profile'])->paginate(50);
+        $posts = Post::with(['comments', 'image', 'user.profile'])->paginate(50);
         return $this->responseSuccess(
             [
                 'data' => PostResource::collection($posts),
@@ -126,8 +126,7 @@ class PostController extends Controller
         );
         }catch (Exception $e) {
         return $this->responseError(null,
-            'Something went wrong',500,
-        $e->getMessage()
+            'Something went wrong',500
         );
     }
     }
