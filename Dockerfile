@@ -31,10 +31,9 @@ RUN a2enmod rewrite
 # إنشاء مجلدات التخزين والكاش
 RUN mkdir -p storage/framework/{sessions,views,cache} \
     storage/logs \
-    storage/app/public \
     bootstrap/cache
 
-# تثبيت الحزم بـ Composer
+# تثبيت حزم Composer
 RUN composer install --no-interaction --prefer-dist --optimize-autoloader --no-dev || \
     composer install --no-interaction --prefer-dist --optimize-autoloader
 
@@ -45,6 +44,7 @@ RUN chmod +x /usr/local/bin/docker-entrypoint.sh
 # ضبط صلاحيات Laravel بشكل صحيح
 RUN chown -R www-data:www-data storage bootstrap/cache \
     && chmod -R 775 storage bootstrap/cache
+
 
 # فتح البورت
 EXPOSE 80

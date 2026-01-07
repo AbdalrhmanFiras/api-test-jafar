@@ -11,7 +11,7 @@ services:
       - storage_data:/var/www/html/storage
     environment:
       APP_ENV: production
-      APP_DEBUG: false
+      APP_DEBUG: true
       APP_KEY: base64:qjtj5S8UiQKUMs6aDOzCWmxZbF2Q7W7voJAIx8xMX5I=
       APP_URL: https://backendlaravel.cupital.xyz
       DB_CONNECTION: mysql
@@ -20,11 +20,11 @@ services:
       DB_DATABASE: default
       DB_USERNAME: mysql
       DB_PASSWORD: NhUFwbcF6S7Noi7T1PvORJWM0J3FQCAhW7hOTvnmK5kbie1i9cnKNOcSH1juXokL
-      JWT_SECRET: your_jwt_secret_here
+      JWT_SECRET: 
       JWT_TTL: 1440
       SESSION_DRIVER: database
       CACHE_STORE: database
       QUEUE_CONNECTION: database
 
-volumes:
+      volumes:
   storage_data:
