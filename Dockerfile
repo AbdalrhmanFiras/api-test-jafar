@@ -31,9 +31,10 @@ RUN a2enmod rewrite
 # إنشاء مجلدات التخزين والكاش
 RUN mkdir -p storage/framework/{sessions,views,cache} \
     storage/logs \
+    storage/app/public \
     bootstrap/cache
 
-# تثبيت حزم Composer
+# تثبيت الحزم بـ Composer
 RUN composer install --no-interaction --prefer-dist --optimize-autoloader --no-dev || \
     composer install --no-interaction --prefer-dist --optimize-autoloader
 

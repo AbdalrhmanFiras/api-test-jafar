@@ -1,23 +1,22 @@
 #!/bin/bash
 set -e
 
-# Fix permissions
-chown -R www-data:www-data /var/www/html/storage /var/www/html/bootstrap/cache
-chmod -R 755 /var/www/html/storage /var/www/html/bootstrap/cache
-# Ensure public storage directory is writable
-chmod -R 775 /var/www/html/storage/app/public
-chown -R www-data:www-data /var/www/html/storage/app/public
+echo "Fixing Laravel permissions..."
 
-# Create storage directories if they don't exist
+# صلاحيات storage و cache
+chown -R www-data:www-data /var/www/html/storage /var/www/html/bootstrap/cache
+chmod -R 775 /var/www/html/storage /var/www/html/bootstrap/cache
+
+# إنشاء أي مجلد مفقود
 mkdir -p /var/www/html/storage/framework/{sessions,views,cache}
 mkdir -p /var/www/html/storage/logs
 mkdir -p /var/www/html/storage/app/public/profiles
 mkdir -p /var/www/html/bootstrap/cache
 
-# Create symbolic link for storage (IMPORTANT for serving files)
+# إنشاء الرابط للملفات
 php artisan storage:link || true
 
-# Clear and cache config
+# مسح cache و config و route
 php artisan config:clear || true
 php artisan cache:clear || true
 php artisan route:clear || true
@@ -30,6 +29,5 @@ if [ "$APP_ENV" = "production" ]; then
     php artisan view:cache || true
 fi
 
-# Start Apache
+# تشغيل Apache
 exec apache2-foreground
-
