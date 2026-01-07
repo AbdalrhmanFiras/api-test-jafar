@@ -10,19 +10,11 @@ RUN sed -ri -e 's!/var/www/html!${APACHE_DOCUMENT_ROOT}!g' /etc/apache2/sites-av
 
 # تثبيت المتطلبات اللازمة لـ Laravel
 RUN apt-get update && apt-get install -y --no-install-recommends \
-    git \
-    curl \
-    zip \
-    unzip \
-    libonig-dev \
-    libzip-dev \
-    libpq-dev \
-    libxml2-dev \
-    netcat-openbsd \
-    iputils-ping \
+    git curl zip unzip \
+    libonig-dev libzip-dev libpq-dev libxml2-dev \
+    netcat-openbsd iputils-ping \
     && docker-php-ext-install pdo pdo_mysql pdo_pgsql zip mbstring exif pcntl bcmath \
-    && apt-get clean \
-    && rm -rf /var/lib/apt/lists/*
+    && apt-get clean && rm -rf /var/lib/apt/lists/*
 
 # تثبيت Composer
 COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
@@ -36,27 +28,25 @@ COPY . .
 # تفعيل mod_rewrite في Apache
 RUN a2enmod rewrite
 
-# إنشاء مجلدات التخزين والكاش مع الصلاحيات الصحيحة
+# إنشاء مجلدات التخزين والكاش
 RUN mkdir -p storage/framework/{sessions,views,cache} \
-    && mkdir -p storage/logs \
-    && mkdir -p bootstrap/cache
+    storage/logs \
+    bootstrap/cache
 
-# تثبيت الحزم بـ Composer
+# تثبيت حزم Composer
 RUN composer install --no-interaction --prefer-dist --optimize-autoloader --no-dev || \
-    (echo "Composer install failed, trying without --no-dev" && \
-    composer install --no-interaction --prefer-dist --optimize-autoloader)
+    composer install --no-interaction --prefer-dist --optimize-autoloader
 
-# نسخ ملف entrypoint
+# نسخ ملف entrypoint وضبط الصلاحيات
 COPY docker-entrypoint.sh /usr/local/bin/
 RUN chmod +x /usr/local/bin/docker-entrypoint.sh
 
-# تغيير صلاحيات الملفات
-RUN chown -R www-data:www-data /var/www/html \
-    && chmod -R 755 /var/www/html/storage \
-    && chmod -R 755 /var/www/html/bootstrap/cache
-
-# استخدام entrypoint script
-ENTRYPOINT ["docker-entrypoint.sh"]
+# ضبط صلاحيات Laravel بشكل صحيح
+RUN chown -R www-data:www-data storage bootstrap/cache \
+    && chmod -R 775 storage bootstrap/cache
 
 # فتح البورت
 EXPOSE 80
+
+# استخدام entrypoint
+ENTRYPOINT ["docker-entrypoint.sh"]
