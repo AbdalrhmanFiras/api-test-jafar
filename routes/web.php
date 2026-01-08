@@ -7,15 +7,9 @@ use Laravel\Socialite\Facades\Socialite;
 
 
 
-Route::get('/home', function () {
-    return view('welcome');
-});
 
-Route::get('/auth/google', function () {
-    return Socialite::driver('google')->redirect();
-});
 
-Route::get('/auth/google/callback', [AuthController::class, 'googleCallback']);
+// Route::get('/auth/google/callback', [AuthController::class, 'googleCallback']);
 
 
 Route::get('/test-db', function() {
