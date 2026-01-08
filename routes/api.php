@@ -8,6 +8,12 @@ use App\Http\Controllers\LikeController;
 use App\Http\Controllers\PostController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\UserController;
+use Laravel\Socialite\Facades\Socialite;
+Route::get('/auth/google', function () {
+    return Socialite::driver('google')->stateless()->redirect();
+});
+Route::get('/auth/google/callback', [AuthController::class, 'googleCallback']);
+
 
 Route::get('/users' , [UserController::class , 'index']);
 

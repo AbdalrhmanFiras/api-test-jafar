@@ -4,6 +4,10 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use Tymon\JWTAuth\Facades\JWTAuth;
+use Laravel\Socialite\Facades\Socialite;
+use App\Models\User;
+use Illuminate\Support\Facades\Auth;
+
 
 /**
  * @tags Auth Endpoint
@@ -12,6 +16,28 @@ use Tymon\JWTAuth\Facades\JWTAuth;
 
 class AuthController extends Controller
 {
+
+/**
+ * login with google
+ */
+public function googleCallback()
+{
+    $googleUser = Socialite::driver('google')->stateless()->user();
+
+    $user = User::where('email', $googleUser->email)->first();
+
+    if (!$user) {
+        $user = User::create([
+            'name' => $googleUser->name,
+            'email' => $googleUser->email,
+            'password' => bcrypt(str()->random(16)),
+        ]);
+    }
+
+    Auth::login($user);
+
+    return redirect('/home');
+}
     /**
      * handle the user register
      */
