@@ -15,7 +15,13 @@ Route::get('/auth/google', function () {
 });
 Route::get('/auth/google/callback', [AuthController::class, 'googleCallback']);
 
-
+Route::get('/debug-env', function () {
+    dd(
+        env('GOOGLE_CLIENT_ID'),
+        env('GOOGLE_CLIENT_SECRET'),
+        env('GOOGLE_REDIRECT_URI')
+    );
+});
 Route::get('/users' , [UserController::class , 'index']);
 
 Route::post('/register', [AuthController::class, 'register']);
