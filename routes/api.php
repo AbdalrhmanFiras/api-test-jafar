@@ -9,14 +9,6 @@ use App\Http\Controllers\PostController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\UserController;
 use Laravel\Socialite\Facades\Socialite;
-<<<<<<< HEAD
-=======
-Route::get('/auth/google', function () {
-    return Socialite::driver('google')->stateless()->redirect();
-});
-Route::get('/auth/google/callback', [AuthController::class, 'googleCallback']);
-
->>>>>>> b57c380 (add google login)
 
 Route::get('/auth/google', function () {
     return Socialite::driver('google')->stateless()->redirect();
