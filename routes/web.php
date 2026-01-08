@@ -7,9 +7,17 @@ use Laravel\Socialite\Facades\Socialite;
 
 
 
+<<<<<<< HEAD
 
 
 // Route::get('/auth/google/callback', [AuthController::class, 'googleCallback']);
+=======
+Route::get('/home', function () {
+    return view('welcome');
+});
+>>>>>>> b57c380 (add google login)
+
+
 
 
 Route::get('/test-db', function() {
