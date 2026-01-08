@@ -9,6 +9,7 @@ use App\Http\Controllers\PostController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\UserController;
 use Laravel\Socialite\Facades\Socialite;
+
 Route::get('/auth/google', function () {
     return Socialite::driver('google')->stateless()->redirect();
 });
