@@ -6,6 +6,14 @@ use Illuminate\Support\Facades\Route;
 use Laravel\Socialite\Facades\Socialite;
 
 
+
+
+
+// Route::get('/auth/google/callback', [AuthController::class, 'googleCallback']);
+
+
+
+
 Route::get('/test-db', function() {
     try {
         DB::connection()->getPdo();
