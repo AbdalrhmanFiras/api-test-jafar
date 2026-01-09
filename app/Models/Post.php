@@ -3,13 +3,14 @@
 namespace App\Models;
 
 use App\Models\Comment;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 
 class Post extends Model
 {
     use HasFactory;
-     protected $appends = ['image_url'];
+     protected $appends = ['image_url','is_liked'];
 
     protected $guarded = ['id'];
 
@@ -32,6 +33,17 @@ class Post extends Model
       public function getImageUrlAttribute()
     {
         return $this->image ? $this->image->url : null;
+    }
+
+    public function getIsLikedAttribute(): bool
+    {
+        if (!Auth::check()) {
+            return false;
+        }
+
+        return $this->likes
+            ->where('user_id', Auth::id())
+            ->exists();
     }
 
 

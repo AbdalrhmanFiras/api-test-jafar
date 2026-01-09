@@ -110,7 +110,7 @@ class PostController extends Controller
     public function index(){
 
         try{
-        $posts = Post::with(['comments','image','user.profile'])->paginate(50);
+        $posts = Post::with(['image','user.profile'])->withCount('likes')->paginate(50);
         return $this->responseSuccess(
             [
                 'data' => PostResource::collection($posts),
