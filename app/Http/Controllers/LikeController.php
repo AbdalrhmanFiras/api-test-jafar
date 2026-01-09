@@ -59,8 +59,7 @@ class LikeController extends Controller
             return response()->json(['message' => 'Post not found'], 404);
         }
 
-       $likesCount = $post->likes()->count();
-
+$likesCount = $post->likedUsers()->count();
         return response()->json([
         'post_id' => $post->id,
         'total_likes' => $likesCount

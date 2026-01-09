@@ -36,15 +36,15 @@ class Post extends Model
     }
 
     public function getIsLikedAttribute(): bool
-    {
-        if (!Auth::check()) {
-            return false;
-        }
-
-        return $this->likedUsers
-            ->where('user_id', Auth::id())
-            ->exists();
+{
+    if (!Auth::check()) {
+        return false;
     }
+
+    return $this->likedUsers
+        ->where('id', Auth::id()) // بدل user_id استخدم id هنا لأنه Collection من User models
+        ->isNotEmpty();
+}
 
      public function getLikesCountAttribute(): int
     {
