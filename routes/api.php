@@ -14,6 +14,7 @@ Route::get('/auth/google', function () {
     return Socialite::driver('google')->stateless()->redirect();
 });
 Route::get('/auth/google/callback', [AuthController::class, 'googleCallback']);
+Route::get('/users' , [UserController::class , 'index']);
 
 // Route::get('/debug-env', function () {
 //     dd(
@@ -22,7 +23,6 @@ Route::get('/auth/google/callback', [AuthController::class, 'googleCallback']);
 //         env('GOOGLE_REDIRECT_URI')
 //     );
 // });
-Route::get('/users' , [UserController::class , 'index']);
 
 Route::post('/register', [AuthController::class, 'register']);
 Route::post('/login', [AuthController::class, 'login']);
@@ -32,9 +32,9 @@ Route::middleware('auth:api')->group(function () {
     Route::get('/me', [AuthController::class, 'me']);
 });
 
-Route::get('/post', [PostController::class, 'index'])->withoutMiddleware('auth:api');
 
 Route::middleware('auth:api')->group(function () {
+    Route::get('/post', [PostController::class, 'index']);
     Route::post('/post', [PostController::class, 'store']);
     Route::get('/post/comment', [CommentController::class, 'index']);//work
     Route::post('/post/{postId}/comment', [CommentController::class, 'store']);//
