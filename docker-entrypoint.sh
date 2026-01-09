@@ -32,4 +32,3 @@ fi
 
 # Start Apache
 exec apache2-foreground
-
