@@ -42,7 +42,7 @@ class Post extends Model
     }
 
     return $this->likedUsers
-        ->where('id', Auth::id()) // بدل user_id استخدم id هنا لأنه Collection من User models
+        ->where('id', Auth::id()) 
         ->isNotEmpty();
 }
 
