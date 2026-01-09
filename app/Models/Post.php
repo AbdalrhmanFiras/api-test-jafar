@@ -35,17 +35,19 @@ class Post extends Model
         return $this->image ? $this->image->url : null;
     }
 
-    public function getIsLikedAttribute(): bool
+public function getIsLikedAttribute(): bool
 {
-    if (!Auth::check()) {
-        return false;
+    $user = Auth::user();
+    if (!$user) return false;
+
+    // Check if the current user exists in likedUsers collection if loaded
+    if ($this->relationLoaded('likedUsers')) {
+        return $this->likedUsers->contains($user->id);
     }
 
-    return $this->likedUsers
-        ->where('id', Auth::id()) 
-        ->isNotEmpty();
+    // Otherwise query the pivot table directly
+    return $this->likedUsers()->where('user_id', $user->id)->exists();
 }
-
      public function getLikesCountAttribute(): int
     {
         return $this->likedUsers()->count();

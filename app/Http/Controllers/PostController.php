@@ -124,7 +124,7 @@ class PostController extends Controller
             $posts->count() ? 'Posts fetched successfully' : 'No posts found',
             200
         );
-        }catch (Exception $e) {
+        }catch(Exception $e) {
         return $this->responseError(null,
             'Something went wrong',500,['hi']
         );
