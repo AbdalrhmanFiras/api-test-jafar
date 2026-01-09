@@ -44,7 +44,7 @@ class User extends Authenticatable implements JWTSubject
     }
   
 
-    public function likes(){
+    public function likedPosts(){
         return $this->belongsToMany(Post::class, 'post_likes')->withTimestamps();
     }
     /**

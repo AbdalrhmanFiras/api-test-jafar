@@ -23,6 +23,8 @@ class PostResource extends JsonResource
             'profile_image' => optional(optional($this->user->profile)->image)->url,
             'image_url' => $this->when($this->image_url , function(){
                 return $this->image_url;}),
+                 'likes_count' => $this->likes_count,
+                'is_liked' => $this->is_liked,
                    
         ];
     }

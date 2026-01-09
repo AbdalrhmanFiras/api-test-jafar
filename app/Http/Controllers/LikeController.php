@@ -21,11 +21,11 @@ class LikeController extends Controller
             return response()->json(['message' => 'Post not found'], 404);
         }
 
-        if ($post->likes()->where('user_id', Auth::id())->exists()) {
+        if ($post->likedUsers()->where('user_id', Auth::id())->exists()) {
             return response()->json(['message' => 'You already liked this post'], 400);
         }
 
-        $post->likes()->attach(Auth::id());
+        $post->likedUsers()->attach(Auth::id());
 
         return response()->json(['message' => 'Post liked successfully'],200);
     }
@@ -42,8 +42,8 @@ class LikeController extends Controller
             return response()->json(['message' => 'Post not found'], 404);
         }
 
-        if ($post->likes()->where('user_id', Auth::id())->exists()) {
-             $post->likes()->detach(Auth::id());
+        if ($post->likedUsers()->where('user_id', Auth::id())->exists()) {
+             $post->likedUsers()->detach(Auth::id());
         }
         return response()->json(['message' => 'Post unliked successfully'],200);
     }

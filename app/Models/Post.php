@@ -22,7 +22,7 @@ class Post extends Model
         return $this->hasMany(Comment::class);
     }
 
-    public function likes(){
+    public function likedUsers(){
         return $this->belongsToMany(User::class , 'post_like');
     }
 
@@ -41,9 +41,14 @@ class Post extends Model
             return false;
         }
 
-        return $this->likes
+        return $this->likedUsers
             ->where('user_id', Auth::id())
             ->exists();
+    }
+
+     public function getLikesCountAttribute(): int
+    {
+        return $this->likedUsers()->count();
     }
 
 
