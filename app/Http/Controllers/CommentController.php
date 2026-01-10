@@ -5,8 +5,12 @@ namespace App\Http\Controllers;
 use App\Http\Resources\CommentResource;
 use App\Models\Post;
 use App\Models\Comment ;
+use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+
+use function Pest\Laravel\delete;
 
 /**
  * @tags Comment Endpoint
@@ -28,7 +32,7 @@ class CommentController extends Controller
             return response()->json(['post not found'],404);
         }
         $data['post_id'] = $postId;
-        $data['user_id'] = $user ?? null; 
+        $data['user_id'] = $user; 
         $comment = Comment::create($data);
 
     return $this->responseSuccess(['data' =>$comment ],'Comment Added Successfully' ,201);
@@ -60,4 +64,22 @@ class CommentController extends Controller
     }
 
 
+      /**
+     * Delete my comment
+     */
+public function removeMyComment($commentId)
+{
+    try{
+    $comment = Comment::where('id', $commentId)
+        ->where('user_id', Auth::id())
+        ->firstOrFail();
+
+    $comment->delete();
+
+    return $this->responseSuccess(null, 'Comment deleted successfully', 200);
+}catch(ModelNotFoundException){
+    return $this->responseError(null,'comment not found' , 404);
 }
+}
+}
+
