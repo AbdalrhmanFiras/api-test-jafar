@@ -16,7 +16,7 @@ use function Pest\Laravel\delete;
  * @tags Comment Endpoint
  */
 
-
+//eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJodHRwOi8vYmFja2VuZGxhcmF2ZWwuY3VwaXRhbC54eXovYXBpL3JlZ2lzdGVyIiwiaWF0IjoxNzY4MDE2NDIxLCJleHAiOjE3NjgxMDI4MjEsIm5iZiI6MTc2ODAxNjQyMSwianRpIjoiSWxadXRMNlZsTWhTbmpseCIsInN1YiI6IjgiLCJwcnYiOiIyM2JkNWM4OTQ5ZjYwMGFkYjM5ZTcwMWM0MDA4NzJkYjdhNTk3NmY3In0.4tXGKpSziZNCx9hOTujwVOqdXnXFVPC_F48V1KUv_xs
 class CommentController extends Controller
 {
 
@@ -64,7 +64,7 @@ class CommentController extends Controller
     }
 
 
-      /**
+     /**
      * Delete my comment
      */
     public function removeMyComment($commentId)
@@ -81,6 +81,9 @@ class CommentController extends Controller
         }
     }
 
+    /**
+     * Update my comment
+     */
     public function update( Request $request,$commentId){
         try{
             $data = $request->validate(['context' => 'required|string']); 
