@@ -35,7 +35,7 @@ class CommentController extends Controller
         $data['user_id'] = $user; 
         $comment = Comment::create($data);
 
-    return $this->responseSuccess(['data' =>$comment ],'Comment Added Successfully' ,201);
+    return $this->responseSuccess(['data' =>new CommentResource($comment) ],'Comment Added Successfully' ,201);
     }
 
      /**
@@ -45,7 +45,7 @@ class CommentController extends Controller
     public function index(){
         $user_id = Auth::id();
         $comments = Comment::where('user_id' , $user_id)->paginate(5);
-        return $this->responseSuccess(['data'=>$comments] , !$comments ? 
+        return $this->responseSuccess(['data'=>CommentResource::collection($comments)] , !$comments ? 
         'Comment fetched successfully' : 'not comments' ,200);
     }
 
@@ -67,19 +67,31 @@ class CommentController extends Controller
       /**
      * Delete my comment
      */
-public function removeMyComment($commentId)
-{
-    try{
-    $comment = Comment::where('id', $commentId)
-        ->where('user_id', Auth::id())
-        ->firstOrFail();
+    public function removeMyComment($commentId)
+    {
+        try{
+        $comment = Comment::where('id', $commentId)
+            ->where('user_id', Auth::id())
+            ->firstOrFail();
 
-    $comment->delete();
+        $comment->delete();
+        return $this->responseSuccess(null, 'Comment deleted successfully', 200);
+        }catch(ModelNotFoundException){
+        return $this->responseError(null,'comment not found' , 404);
+        }
+    }
 
-    return $this->responseSuccess(null, 'Comment deleted successfully', 200);
-}catch(ModelNotFoundException){
-    return $this->responseError(null,'comment not found' , 404);
-}
-}
+    public function update( Request $request,$commentId){
+        try{
+            $data = $request->validate(['context' => 'required|string']); 
+            $comment = Comment::where('id' , $commentId)->where('user_id' , Auth::id())->firstOrFail();
+
+        $comment->update($data);
+         return $this->responseSuccess(new CommentResource($comment), 'Comment deleted successfully', 200);
+
+        }catch(ModelNotFoundException){
+        return $this->responseError(null,'comment not found' , 404);
+         }
+    }
 }
 

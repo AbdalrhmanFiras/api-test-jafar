@@ -10,9 +10,9 @@ use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\UserController;
 use Laravel\Socialite\Facades\Socialite;
 
-Route::get('/auth/google', function () {
-    return Socialite::driver('google')->stateless()->redirect();
-});
+// Route::get('/auth/google', function () {
+//     return Socialite::driver('google')->stateless()->redirect();
+// });
 Route::get('/auth/google/callback', [AuthController::class, 'googleCallback']);
 Route::get('/users' , [UserController::class , 'index']);
 
@@ -37,9 +37,10 @@ Route::middleware('auth:api')->group(function () {
     Route::get('/post', [PostController::class, 'index']);
     Route::post('/post', [PostController::class, 'store']);
     Route::get('/post/comment', [CommentController::class, 'index']);//work
+    Route::put('/post/{commentId}/update-comment', [CommentController::class, 'update']);//
     Route::post('/post/{postId}/comment', [CommentController::class, 'store']);//
     Route::get('/post/{postId}/get-comment', [CommentController::class, 'getPostcomment']);//
-    Route::delete('/post/{commentId}/delete-comment', [CommentController::class, 'removeMycomment']);//
+    Route::delete('/post/{commentId}/delete-comment',[CommentController::class,'removeMycomment']);//
     Route::get('/post/myposts', [PostController::class, 'myPosts']);
     Route::post('/post/{Id}', [PostController::class, 'update'])->withoutMiddleware('auth:api');
     Route::get('/post/{Id}', [PostController::class, 'show']);
